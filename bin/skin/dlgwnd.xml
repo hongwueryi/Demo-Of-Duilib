@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Window size="500,300" sizebox="4,4,6,6" caption="0,0,0,20">
+  <VerticalLayout bkcolor="#FFFFFFFF" >
+	<Button name="closebtn" text="【关闭】" />
+	<Control height="20" />
+	<Control name="pic_waiting" bkimage="file='Res/waiting.png' source='0,0,50,50'"  pos="170,100,220,150" float="true" />
+	<Control bkimage="Res/pic.png" pos="100,40,0,0" float="true" width="302" height="227" visible="false"/>
+  </VerticalLayout>
+  
+</Window>

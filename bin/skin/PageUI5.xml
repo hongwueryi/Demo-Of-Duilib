@@ -1,0 +1,37 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Window>
+  <VerticalLayout bkcolor="#FFFFFFFF" bordercolor="#FF3E3E3E" bordersize="1" inset="5,2,5,2">
+	<Control height="20" />
+    <!---------------------------------------List--------------------------------------------->
+	<Label height="1" bkimage="Res/page1/hor_line.bmp" />
+	<HorizontalLayout inset="0,10,0,10" height="220">
+		<MyList name="lstControl" vscrollbar="true" />
+		<Button name="addlistiteminpage5" text="【添加】" width="100" />
+	</HorizontalLayout>
+	<!---------------------------------------TreeView--------------------------------------------->
+	<Label height="1" bkimage="Res/page1/hor_line.bmp" />
+	<HorizontalLayout height="200" inset="0,10,0,10">
+		<Label text="TreeView控件" glowsize="20" font="1" textcolor="#FF555555" width="120"/>
+		<VerticalLayout inset="2,2,2,2" bordersize="1" bordercolor="#FF666666">
+			<TreeView name="MyTreeView" bkcolor="#FFE3E3E3" visiblefolderbtn="true" visiblecheckbtn="true">
+				<TreeNode text="文件夹1" folderattr="padding=&quot;0,1,0,0&quot; width=&quot;16&quot; height=&quot;16&quot; normalimage=&quot;file='Res/page2/treeview_b.png' source='0,0,16,16' &quot; hotimage=&quot;file='Res/page2/treeview_b.png' source='16,0,32,16' &quot; selectedimage=&quot;file='Res/page2/treeview_a.png' source='0,0,16,16' &quot; selectedhotimage=&quot;file='Res/page2/treeview_a.png' source='16,0,32,16' &quot;" checkboxattr="width=&quot;16&quot; height=&quot;16&quot; normalimage=&quot;file='Res/page2/unchecked.png' &quot; selectedimage=&quot;file='Res/page2/checked.png' &quot;">
+					<Edit text="Edit" bkcolor="#FFFF0000"/>
+					<Label text="Label" bkcolor="#FF00FF00"/>
+					<Text text="Text" bkcolor="#FF0000FF"/>
+				</TreeNode>
+				
+				<TreeNode text="文件夹2" folderattr="padding=&quot;0,1,0,0&quot; width=&quot;16&quot; height=&quot;16&quot; normalimage=&quot;file='Res/page2/treeview_b.png' source='0,0,16,16' &quot; hotimage=&quot;file='Res/page2/treeview_b.png' source='16,0,32,16' &quot; selectedimage=&quot;file='Res/page2/treeview_a.png' source='0,0,16,16' &quot; selectedhotimage=&quot;file='Res/page2/treeview_a.png' source='16,0,32,16' &quot;" checkboxattr="width=&quot;16&quot; height=&quot;16&quot; normalimage=&quot;file='Res/page2/unchecked.png' &quot; selectedimage=&quot;file='Res/page2/checked.png' &quot;">
+					<Label text="新文件2"/>
+					<TreeNode text="文件夹3" folderattr="padding=&quot;0,1,0,0&quot; width=&quot;16&quot; height=&quot;16&quot; normalimage=&quot;file='Res/page2/treeview_b.png' source='0,0,16,16' &quot; hotimage=&quot;file='Res/page2/treeview_b.png' source='16,0,32,16' &quot; selectedimage=&quot;file='Res/page2/treeview_a.png' source='0,0,16,16' &quot; selectedhotimage=&quot;file='Res/page2/treeview_a.png' source='16,0,32,16' &quot;" checkboxattr="width=&quot;16&quot; height=&quot;16&quot; normalimage=&quot;file='Res/page2/unchecked.png' &quot; selectedimage=&quot;file='Res/page2/checked.png' &quot;">
+					<Label text="新文件3"/>
+					</TreeNode>
+					<TreeNode text="文件夹3" folderattr="padding=&quot;0,1,0,0&quot; width=&quot;16&quot; height=&quot;16&quot; normalimage=&quot;file='Res/page2/treeview_b.png' source='0,0,16,16' &quot; hotimage=&quot;file='Res/page2/treeview_b.png' source='16,0,32,16' &quot; selectedimage=&quot;file='Res/page2/treeview_a.png' source='0,0,16,16' &quot; selectedhotimage=&quot;file='Res/page2/treeview_a.png' source='16,0,32,16' &quot;" checkboxattr="width=&quot;16&quot; height=&quot;16&quot; normalimage=&quot;file='Res/page2/unchecked.png' &quot; selectedimage=&quot;file='Res/page2/checked.png' &quot;">
+					<Label text="新文件3"/>
+					</TreeNode>
+				</TreeNode>
+			</TreeView>
+			<Button name="TreeTest" text="【树操作】"  width="100"/>
+		</VerticalLayout>
+	</HorizontalLayout>
+  </VerticalLayout>
+</Window>

@@ -1,0 +1,114 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Window>
+  <VerticalLayout bkcolor="#FFFFFFFF" inset="5,2,2,2" bordercolor="#FF3E3E3E" bordersize="1">
+	<Control height="20" />
+	<Label height="1" bkimage="Res/page1/hor_line.bmp" />
+	<!---------------------------------------Button--------------------------------------------->
+	<HorizontalLayout height="60">
+		<Label text="按钮(Button)" font="1" textcolor="#FF555555" width="120" />
+		<VerticalLayout>
+			<Control />
+			<HorizontalLayout height="30" childpadding="12">				
+				<Button name="openDlg" width="100" text="普通按钮" textcolor="#FF555555" normalimage="file='Res/page1/button_normal.png' corner='4,4,4,4' " hotimage="file='Res/page1/button_hover.png' corner='4,4,4,4'" pushedimage="file='Res/page1/button_pushed.png' corner=4'4'4'4"/>
+				<Button name="SetTimer" width="100" text="图标按钮" textcolor="#FF555555" textpadding="10,0,0,0" foreimage="file='Res/page1/icon.png' dest='10,7,26,23'" normalimage="file='Res/page1/button_normal.png' corner='4,4,4,4' " hotimage="file='Res/page1/button_hover.png' corner='4,4,4,4'" pushedimage="file='Res/page1/button_pushed.png' corner=4'4'4'4"/>
+				<Button name="commandbtn" width="100" tooltip="Alt+S" text="图标按钮(&S)" textcolor="#FF555555" shortcut="S" normalimage="file='Res/page1/button_normal.png' corner='4,4,4,4' " hotimage="file='Res/page1/button_hover.png' corner='4,4,4,4'" pushedimage="file='Res/page1/button_pushed.png' corner=4'4'4'4"/>	
+				<Button text="测试按钮"  textpadding="30,7,0,0" align="left" foreimage="file='Res/page1/icon.png' dest='10,7,26,23'" width="100" bkcolor="#FF00FFFF"	/>			
+				<!--<CheckBox name="CheckBox" value="height='20' width='20' align='left' textpadding='24,0,0,0'  normalimage='Res/page2/unchecked.png' selectedimage='Res/page2/checked.png' disabledimage='Res/page2/checked.png'" /> -->
+			</HorizontalLayout>
+			<Control />
+		</VerticalLayout>
+	</HorizontalLayout>
+	<!---------------------------------------Edit--------------------------------------------->
+	<Label height="1" bkimage="Res/page1/hor_line.bmp" />
+	<HorizontalLayout height="60">
+		<Label text="编辑框(Edit)" font="1" textcolor="#FF555555" width="120"/>
+		<VerticalLayout>
+			<Control />
+			<HorizontalLayout height="30" childpadding="12">
+				<Edit  name="EditChange" tooltip="普通控件" text="普通控件" bkimage="res='Res/page1/button_pushed.png' corner='6,6,6,6'" />
+				<Edit tooltip="只读控件" text="只读控件" readonly="true" bkimage="res='Res/page1/button_pushed.png' corner='6,6,6,6'" />
+				<Edit name="NumberEdit" tooltip="数字控件" text="0123456789" numberonly="true" bkimage="res='Res/page1/button_pushed.png' corner='6,6,6,6'" />
+				<Edit tooltip="密码控件" text="0123456789" password="true" bkimage="res='Res/page1/button_pushed.png' corner='6,6,6,6'" />
+				<Edit tooltip="普通控件" text="显示不全用...代替" width="100" endellipsis="true" bkimage="res='Res/page1/button_pushed.png' corner='6,6,6,6'" />
+			</HorizontalLayout>
+			<Control />
+		</VerticalLayout>
+	</HorizontalLayout>
+	<!---------------------------------------Combo--------------------------------------------->
+	<Label height="1" bkimage="Res/page1/hor_line.bmp" />
+	<HorizontalLayout height="60">
+		<Label text="下拉框(Combo)" font="1" textcolor="#FF555555" width="120"/>
+		<VerticalLayout>
+			<Control />
+			<HorizontalLayout height="23" childpadding="12">
+				<Combo name="combo1" droptype="droplist" width="100" height="22" normalimage="file='Res/page1/combo.png' source='0,0,100,22' corner='2,2,20,2'" hotimage="file='Res/page1/combo.png' source='0,22,100,44' corner='2,2,22,2'" pushedimage="file='Res/page1/combo.png' source='0,44,100,66' corner='2,2,22,2'">					
+				</Combo>
+				<Combo droptype="droplist" dropboxsize="100, 150" textpadding="4,1,1,1" width="50" height="20" normalimage="file='Res/page1/combo.png' source='0,0,100,22' corner='2,2,20,2'" hotimage="file='Res/page1/combo.png' source='0,22,100,44' corner='2,2,22,2'" pushedimage="file='Res/page1/combo.png' source='0,44,100,66' corner='2,2,22,2'">
+					<ListLabelElement text="0" selected="true" height="23"/>
+					<ListLabelElement text="01" height="23" />
+					<ListLabelElement text="02" height="23" />
+					<ListLabelElement text="03" height="23" />
+					<ListLabelElement text="04" height="23" />
+					<ListLabelElement text="05" height="23" />
+					<ListLabelElement text="06" height="23" />
+					<ListLabelElement text="07" height="23" />
+					<ListLabelElement text="08" height="23" />
+					<ListLabelElement text="09" height="23" />
+					<ListLabelElement text="10" height="23" />
+					<ListLabelElement text="11" height="23" />
+					<ListLabelElement text="12" height="23" />
+					<ListLabelElement text="13" height="23" />
+					<ListLabelElement text="14" height="23" />
+					<ListLabelElement text="15" height="23" />
+				</Combo>
+				<HorizontalLayout width="200">
+				<Combo  pos="0,0,200,21" float="true" width="200" height="21" textpadding="4,1,1,1" normalimage="file='Res/page1/Combo_nor.bmp'  corner='2,2,20,2'" hotimage="file='Res/page1/Combo_over.bmp' corner='2,2,20,2'" pushedimage="file='Res/page1/Combo_over.bmp' corner='2,2,20,2'">					
+					<ListLabelElement text="00" selected="true" height="23"/>
+					<ListLabelElement text="01" height="23" />
+					<ListLabelElement text="02" height="23" />
+					<ListLabelElement text="03" height="23" />
+				</Combo>
+				<Edit pos="1,1,178,20" float="true" readonly="true" text="这上面覆盖了一个只读的编辑框，解决文字过长无法显示完全的问题" />
+				</HorizontalLayout>
+				<Label name="ComboCurValue" textcolor="#FFFF0000"/>
+			</HorizontalLayout>
+			<Control />
+		</VerticalLayout>
+	</HorizontalLayout>
+	<!---------------------------------------Progress--------------------------------------------->
+	<Label height="1" bkimage="Res/page1/hor_line.bmp" />
+	<HorizontalLayout height="60">
+		<Label text="进度条(Progress/Slider)" font="1" textcolor="#FF555555" width="220"/>
+		<VerticalLayout>
+			<Control />
+			<HorizontalLayout height="20" childpadding="12">
+				<Progress name="progressbar" width="300" bkcolor="#FF555555" value="0" hor="true" isstretchfore="true" foreimage="file='Res/page1/processforce.png' corner='10,0,10,0'" min="0" max="100" height="12"/>
+				<Slider name="alpha_controlor" width="300" min="20" max="255" value="50" thumbsize="10,10" bkimage="file='Res/page1/bg.bmp' corner='6,0,6,0' mask='#FFFF00FF'" foreimage="file='Res/page1/fg.bmp' corner='6,0,6,0' mask='#FFFF00FF'" thumbimage="file='Res/page1/thumb.bmp' source='30,0,40,10' mask='#FFDAEBF9'" thumbhotimage="file='Res/page1/thumb.bmp' source='10,0,20,10' mask='#FFDAEBF9'"/>
+			</HorizontalLayout>
+			<Control />
+		</VerticalLayout>
+	</HorizontalLayout>
+	<!---------------------------------------RichEdit--------------------------------------------->
+	<Label height="1" bkimage="Res/page1/hor_line.bmp" />
+	<HorizontalLayout height="120">
+		<Label text="RichEdit控件" glowsize="20" font="1" textcolor="#FF555555" width="120"/>
+		<VerticalLayout>
+			<Control />
+			<VerticalLayout height="80" inset="2,2,2,2" bordersize="1" bordercolor="#FF666666">
+				<RichEdit vscrollbar="true" autovscroll="true" readonly="false"/>
+			</VerticalLayout> 
+			<Control />
+		</VerticalLayout>
+	</HorizontalLayout>
+	<!------------------------------------------------------------------------------------>
+	<Label height="1" bkimage="Res/page1/hor_line.bmp" />
+	<Control height="20"/>
+	<HorizontalLayout >
+		<Label text="自定义ButtonGif控件" glowsize="20" font="1" textcolor="#FF555555" width="260"/>
+		<ButtonGif width="80" height="80"  NormalGifFile="Res/page1/124.gif"/>   
+		<ButtonGif height="60" width="350" NormalGifFile="Res/page1/bird.gif" />
+		<ButtonGif width="80" height="80"  NormalGifFile="Res/page1/123.gif"/>
+	</HorizontalLayout>
+
+  </VerticalLayout>
+</Window>

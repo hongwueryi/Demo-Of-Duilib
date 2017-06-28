@@ -1,0 +1,4205 @@
+<html>
+<head>
+<style type="text/css">
+#customers
+  {
+  font-family:"Trebuchet MS", Arial, Helvetica, sans-serif;
+  width:100%;
+  border-collapse:collapse;
+  }
+
+#customers td, #customers th 
+  {
+  font-size:1em;
+  border:1px solid #98bf21;
+  padding:3px 7px 2px 7px;
+  text-align: center;
+  }
+
+#customers th 
+  {
+  font-size:1.1em;
+  text-align:center;
+  padding-top:5px;
+  padding-bottom:4px;
+  background-color:#A7C942;
+  color:#ffffff;
+  }
+
+#customers tr.alt 
+  {
+  color:#000000;
+  background-color:#eaeaea;
+  text-align: center;
+  }
+ #customers td.right 
+  {
+  text-align: right;
+  }
+ #customers td.left 
+  {
+  text-align: left;
+  }
+</style>
+<script>
+//2B2911A3-B14C-4f66-8EEC-82E86C0A748A
+	if (!!window.ActiveXObject || 'ActiveXObject' in window) {
+		document.writeln("<OBJECT classid=\"CLSID:3F367B74-92D9-4C5E-AB93-234F8A91D5E6\" height=1 id=XTXAPP  style=\"HEIGHT: 1px; LEFT: 10px; TOP: 28px; WIDTH: 1px\" width=1 VIEWASTEXT>");
+		document.writeln("</OBJECT>");
+		XTXAPP.SOF_GetVersion(); 
+		//XTXAPP.SetUserConfig(6, "1");
+	} else {
+		document.writeln("<embed id=XTXAPP0 type=application/x-xtx-axhost clsid={3F367B74-92D9-4C5E-AB93-234F8A91D5E6} event_OnUsbkeyChange=OnUsbKeyChange width=1 height=1 />");
+		XTXAPP = document.getElementById("XTXAPP0");
+		XTXAPP.SOF_GetVersion(); 
+		//XTXAPP.SetUserConfig(6, "1");
+	}
+	
+		//获取用户列表 并填充到证书列表
+	function GetUserList(strListID)
+	{
+		var objListID = eval(strListID);
+		var strUserList = XTXAPP.SOF_GetUserList();
+		//alert(strUserList);
+		while (1) {
+			var i = strUserList.indexOf("&&&");
+			if (i <= 0 ) {
+				break;
+			}
+			var strOneUser = strUserList.substring(0, i);
+			var strName = strOneUser.substring(0, strOneUser.indexOf("||"));
+			var strUniqueID = strOneUser.substring(strOneUser.indexOf("||") + 2, strOneUser.length);
+			var objItem = new Option(strName, strUniqueID);
+			objListID.options.add(objItem);
+			var len = strUserList.length;
+			strUserList = strUserList.substring(i + 3,len);
+		}
+		var objListID = null;
+		return;
+	}
+	//清空证书列表
+	function RemoveUserList(strListID)
+	{
+		var objListID = eval(strListID);
+		var i;
+		var n = objListID.length;
+		for(i = 0; i < n; i++) {
+			objListID.remove(0);
+		}
+	}
+	//重新填充用户列表
+	function ChangeUserList(strListID)
+	{
+		RemoveUserList(strListID);
+		GetUserList(strListID);
+	}
+
+	//非IE浏览器下用到的函数
+	function OnUsbKeyChange()
+	{
+		//alert("OnUsbKeyChange called!");
+		ChangeUserList("form1.login_test_certlst");
+	}
+</script>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+</head>
+
+<body>
+	<p align="center"><b><font size="5" color="#0000FF">客户端证书应用接口测试</font></b></p>
+	<form id="form1" name="form1">
+	<table id="customers">
+		<tr class="alt">
+			<th>测试内容</th>
+			<th>测试参数</th>
+			<th>测试结果</th>
+		</tr>
+		
+		<script type="text/javascript">
+			//登录测试
+			function login_test()
+			{
+				var strContainerName = form1.login_test_certlst.value;
+				var strPin = form1.login_test_passwd.value;
+				
+				if (strContainerName == "") {
+					alert("请插入USBKEY");
+					form1.login_test_certlst.focus();
+					return;
+				}
+				
+				if (strPin == "") {
+					alert("请输入用户口令");
+					form1.login_test_passwd.focus();
+					return;
+				}
+				
+				var submitRtn = XTXAPP.AddSignInfo(strPin);
+				if (submitRtn) {
+					form1.login_test_res.value = "客户端验证服务端签名成功";
+				} else {
+					form1.login_test_res.value = "客户端验证服务端签名失败";
+				}		
+			}
+		</script>	
+		<tr>
+			<td>登录测试</td>
+			<td>
+				<table>
+					<tr> 
+						<td class="right"> 数字证书: </td>
+						<td class="left"> 
+							<select name="login_test_certlst"></select>
+						</td>
+					</tr>
+					<tr> 
+						<td class="right"> 证书密码: </td>
+						<td class="left"> 
+							<input type="password" name="login_test_passwd" size="60">
+						</td>
+					</tr>
+					<tr> 
+						<td colspan="2"><input type="button" value="点击测试" name="login_test_btn" onclick="return login_test()"></td> 
+					<tr>
+				</table>
+			</td>
+			<td><input type="text" name="login_test_res" size="60"></td>
+		</tr>
+		
+		<script type="text/javascript">
+			//获取设备数量
+			function Bytelen(str){
+				var bytelen = 0;
+				var chars = str.split('');
+				for(i = 0; i<chars.length; i++){
+					var char = chars[i];
+					var urichar = encodeURI(char);
+					bytelen += urichar.length == 1 ? 1 : urichar.length / 3;
+				}
+				return bytelen;
+			}
+			function get_device_count()
+			{
+				var keyCount = XTXAPP.GetDeviceCount();
+				form1.get_device_count_res.value = keyCount;
+				//alert(Bytelen("\x31\x32\x00\x33") + "\n" + "\x31\x32\x00\x33");
+			}
+			
+			function get_hard_device_count()
+			{
+				var keyCount = XTXAPP.GetDeviceCountEx(1);
+				form1.get_device_count_res.value = keyCount;
+				//alert(Bytelen("\x31\x32\x00\x33") + "\n" + "\x31\x32\x00\x33");
+			}
+			
+			function get_soft_device_count()
+			{
+				var keyCount = XTXAPP.GetDeviceCountEx(2);
+				form1.get_device_count_res.value = keyCount;
+				//alert(Bytelen("\x31\x32\x00\x33") + "\n" + "\x31\x32\x00\x33");
+			}
+		</script>
+		<tr>
+			<td>获取设备数量</td>
+			<td><input type="button" value="点击测试" name="get_device_count_btn" onclick="return get_device_count()">
+			<input type="button" value="获取硬设备数量" name="get_hard_device_count_btn" onclick="return get_hard_device_count()">
+			<input type="button" value="获取软设备数量" name="get_soft_device_count_btn" onclick="return get_soft_device_count()"></td>
+			<td><input type="text" name="get_device_count_res" size="60"></td>
+		</tr>
+		
+		<script type="text/javascript">
+			//获取所有设备序列号 
+			function get_all_device_sn() 
+			{
+				var allKeySN = XTXAPP.GetAllDeviceSN();
+				if (allKeySN == "") {
+					form1.get_all_device_sn_res.value = "当前不存在设备";
+				} else {
+					form1.get_all_device_sn_res.value = allKeySN;	
+				}	
+			}
+			
+			function get_all_hard_device_sn()
+			{
+				var allKeySN = XTXAPP.GetAllDeviceSNEx(1);
+				if (allKeySN == "") {
+					form1.get_all_device_sn_res.value = "当前不存在硬设备";
+				} else {
+					form1.get_all_device_sn_res.value = allKeySN;	
+				}	
+			}
+			
+			function get_all_soft_device_sn()
+			{
+				var allKeySN = XTXAPP.GetAllDeviceSNEx(2);
+				if (allKeySN == "") {
+					form1.get_all_device_sn_res.value = "当前不存在软设备";
+				} else {
+					form1.get_all_device_sn_res.value = allKeySN;	
+				}	
+			}
+		</script>
+		<tr class="alt">
+			<td>获取所有设备序列号</td>
+			<td><input type="button" value="点击测试" name="get_all_device_sn_btn" onclick="return get_all_device_sn()">
+			<input type="button" value="获取硬设备序列号" name="get_all_hard_device_sn_btn" onclick="return get_all_hard_device_sn()">
+			<input type="button" value="获取软设备序列号" name="get_all_soft_device_sn_btn" onclick="return get_all_soft_device_sn()"></td>
+			<td><input type="text" name="get_all_device_sn_res" size="60"></td>
+		</tr>
+		
+		<script type="text/javascript">
+			//根据索引获取序列号
+			function get_device_sn_byindex()
+			{
+				var idx = form1.get_device_sn_index.value;
+				if (idx == "") {			
+					alert("请输入索引号!");
+					form1.get_device_sn_index.focus();
+					return ;
+				}
+				var ret = XTXAPP.GetDeviceSNByIndex(idx);
+				if (ret == "") {
+					form1.get_device_sn_byindex_res.value = "获取设备序列号失败";
+				} else {
+					form1.get_device_sn_byindex_res.value = ret;	
+				}
+			}
+		</script>
+		<tr>
+			<td>根据索引获取设备序列号</td>
+			<td>
+				<table>
+					<tr> 
+						<td class="right"> 索引值: </td>
+						<td class="left"> <input type="text" value="0", name="get_device_sn_index", size="60"> </td>
+					</tr>
+					<tr> 
+						<td colspan="2"><input type="button" value="点击测试" name="get_device_sn_byindex_btn" onclick="return get_device_sn_byindex()"></td> 
+					<tr>
+				</table>
+			</td>
+			<td> <input type="text" name="get_device_sn_byindex_res" size="60"> </td>		
+		</tr>
+		
+		<script type="text/javascript">
+			//判断设备是否存在
+			function isDeviceExist()
+			{
+				var keysn = form1.isDeviceExist_devicesn.value;
+
+				if (keysn == "") {
+					alert("请输入设备序列号!");
+					form1.isDeviceExist_devicesn.focus();
+					return ;
+				}
+				var ret =  XTXAPP.IsDeviceExist(keysn);
+				if (ret) {
+					form1.isDeviceExist_res.value = "设备" + keysn + "存在";
+				} else {
+					form1.isDeviceExist_res.value = "设备" + keysn + "不存在";
+				}
+			}
+		</script>	
+		<tr class="alt">
+			<td>判断设备是否存在</td>
+			<td>
+				<table>
+					<tr> 
+						<td class="right"> 设备序列号: </td>
+						<td class="left"> 
+							<input type="text" name="isDeviceExist_devicesn", size="40"> 
+							<input type="button" value="获取设备序列号" name="get_keysn" onclick="return get_device_sn()">
+						</td>
+					</tr>
+					<tr> 
+						<td colspan="2"><input type="button" value="点击测试" name="isDeviceExist_btn" onclick="return isDeviceExist()"></td> 
+					<tr>
+				</table>
+			</td>
+			<td><input type="text" name="isDeviceExist_res" size="60"></td>
+		</tr>
+		
+		<script type="text/javascript">
+			//获取设备信息
+			function get_device_info()
+			{
+				var keySN = form1.get_device_info_devicesn.value;
+				var infotype = form1.get_device_info_type.value;
+				if (keySN == "") {
+					alert("请输入设备序列号!");
+					form1.get_device_info_devicesn.focus();
+					return ;
+				}
+				if (infotype == "") {
+					alert("请输入信息类型!");
+					form1.get_device_info_type.focus();
+					return ;
+				}
+				var ret = XTXAPP.GetDeviceInfo(keySN, infotype);
+				if (ret == "") {
+					form1.get_device_info_res.value = "获取设备信息失败";
+				} else {
+					form1.get_device_info_res.value = ret;	
+				}
+			}
+			
+			//获取设备序列号 赋值到设备序列号参数中
+			var cur_keySN = "";
+			function get_device_sn()
+			{
+				var keyCount = XTXAPP.GetDeviceCount();
+				for (i = 0; i < keyCount; i++) {
+					var keySN = XTXAPP.GetDeviceSNByIndex(i);
+					if (cur_keySN != keySN) {
+						cur_keySN = keySN;
+						break;
+					}
+				}
+				if (keyCount <= 0) {
+					cur_keySN = "";
+				}
+				form1.isDeviceExist_devicesn.value = cur_keySN;
+				form1.get_device_info_devicesn.value = cur_keySN;
+				form1.init_device_devicesn.value = cur_keySN;
+				form1.change_adminpin_devicesn.value = cur_keySN;
+				form1.unlock_userpin_devicesn.value = cur_keySN;
+				form1.unlock_userpin_devicesn_ex.value = cur_keySN;
+				form1.generate_keypair_devicesn.value = cur_keySN;
+				form1.export_pubkey_devicesn.value = cur_keySN;
+				form1.export_pkcs10_devicesn.value = cur_keySN;
+				form1.import_sign_cert_devicesn.value = cur_keySN;
+				form1.import_enc_cert_devicesn.value = cur_keySN;
+				form1.write_file_devicesn.value = cur_keySN;
+				form1.enum_files_devicesn.value = cur_keySN;
+				form1.read_file_devicesn.value = cur_keySN;
+				form1.write_file_devicesnex.value = cur_keySN;
+				form1.read_file_devicesnex.value = cur_keySN;
+				form1.get_ContainerCount_devicesn.value = cur_keySN;
+				form1.isContainerExist_devicesn.value = cur_keySN;
+				form1.del_container_devicesn.value = cur_keySN;
+				form1.set_envsn_devicesn.value = cur_keySN;
+				form1.read_envsn_devicesn.value = cur_keySN;
+				form1.del_oldcontainer_devicesn.value = cur_keySN;
+				form1.getallcontainer_devicesn.value = cur_keySN;
+			}
+		</script>
+		<tr>
+			<td>获取设备信息</td>
+			<td>
+				<table>
+					<tr> 
+						<td class="right"> 设备序列号: </td>
+						<td class="left"> 
+							<input type="text" name="get_device_info_devicesn", size="40"> 
+							<input type="button" value="获取设备序列号" name="get_keysn" onclick="return get_device_sn()">
+						</td>
+					</tr>
+					<tr>
+						<td class="right"> 信息类型: </td>
+						<td class="left"> 
+							<input type="text" name="get_device_info_type", value ="1", size="10">
+						</td>
+					</tr>
+					<tr> 
+						<td colspan="2"><input type="button" value="点击测试" name="get_device_info_btn" onclick="return get_device_info()"></td> 
+					<tr>
+				</table>
+			</td>
+		  <td> <input type="text" name="get_device_info_res" size="60"></td>
+		</tr>
+
+		<script type="text/javascript">
+			//格式化设备
+			function init_device()
+			{
+				var keysn = form1.init_device_devicesn.value;
+				var adminpin = form1.init_device_adminpin.value;
+
+				if (keysn == "") {
+					form1.init_device_devicesn.focus();
+					alert("请输入设备序列号!");
+					return ;
+				}
+				if (adminpin == "") {
+					form1.init_device_adminpin.focus();
+					alert("请输入管理员口令!");
+					return ;
+				}
+				
+				var ret = XTXAPP.InitDevice(keysn, adminpin);
+				if (ret) {
+					form1.init_device_res.value = "格式化设备" + keysn + "成功";
+				} else {
+					form1.init_device_res.value = "格式化设备" + keysn + "失败";
+				}	
+			}
+		</script>
+		<tr class="alt">
+			<td>格式化设备</td>
+			<td>
+				<table>
+					<tr> 
+						<td class="right"> 设备序列号: </td>
+						<td class="left"> 
+							<input type="text" name="init_device_devicesn", size="40"> 
+							<input type="button" value="获取设备序列号" name="get_keysn" onclick="return get_device_sn()">
+						</td>
+					</tr>
+					<tr>
+						<td class="right"> 管理员口令: </td>
+						<td class="left"> 
+							<input type="text" name="init_device_adminpin" size="30">
+						</td>
+					</tr>
+					<tr> 
+						<td colspan="2"><input type="button" value="点击测试" name="init_device_btn" onclick="return init_device()"></td> 
+					<tr>
+				</table>
+			</td>
+			<td><input type="text" name="init_device_res" size="60"></td>
+		</tr>	
+		
+		<script type="text/javascript">
+			//修改管理员口令
+			function change_adminpin()
+			{
+				var keysn = form1.change_adminpin_devicesn.value;
+				var oldAdminPin = form1.change_adminpin_oldadminpin.value;
+				var newAdminPin1 = form1.change_adminpin_newadminpin1.value;
+				var newAdminPin2 = form1.change_adminpin_newadminpin2.value;
+				if (keysn == "") {
+					alert("请输入设备序列号!");
+					form1.change_adminpin_devicesn.focus();
+					return ;
+				}
+				if (oldAdminPin == "") {
+					alert("请输入管理员口令!");
+					form1.change_adminpin_oldadminpin.focus();
+					return ;
+				}
+				if (newAdminPin1 == "") {
+					alert("请输入新管理员口令!");
+					form1.change_adminpin_newadminpin1.focus();
+					return ;
+				}
+				if (newAdminPin2 == "") {
+					alert("请输入新管理员口令!");
+					form1.change_adminpin_newadminpin2.focus();
+					return ;
+				}
+				if (newAdminPin1 != newAdminPin2) {
+					alert("两次输入的新口令不一致!");
+					form1.change_adminpin_newadminpin1.value = "";
+					form1.change_adminpin_newadminpin1.value = "";
+					form1.change_adminpin_newadminpin1.focus();
+					return ;
+				}
+				
+				var ret = XTXAPP.ChangeAdminPass(keysn, oldAdminPin, newAdminPin1);
+				if (ret) {
+					form1.change_adminpin_res.value = "修改管理员口令成功";
+				} else {
+					form1.change_adminpin_res.value = "修改管理员口令失败";
+				}	
+			}
+		</script>
+		<tr>
+			<td>修改管理员口令</td>
+			<td>
+				<table>
+					<tr> 
+						<td class="right"> 设备序列号: </td>
+						<td class="left"> 
+							<input type="text" name="change_adminpin_devicesn", size="40"> 
+							<input type="button" value="获取设备序列号" name="get_keysn" onclick="return get_device_sn()">
+						</td>
+					</tr>
+					<tr>
+						<td class="right"> 管理员口令: </td>
+						<td class="left"> 
+							<input type="text" name="change_adminpin_oldadminpin" size="30">
+						</td>
+					</tr>
+					<tr>
+						<td class="right"> 新管理员口令: </td>
+						<td class="left"> 
+							<input type="text" name="change_adminpin_newadminpin1" size="30">
+						</td>
+					</tr>
+					<tr>
+						<td class="right"> 新管理员口令确认: </td>
+						<td class="left"> 
+							<input type="text" name="change_adminpin_newadminpin2" size="30">
+						</td>
+					</tr>
+					<tr> 
+						<td colspan="2"><input type="button" value="点击测试" name="change_adminpin_btn" onclick="return change_adminpin()"></td> 
+					<tr>
+				</table>
+			</td>
+			<td><input type="text" name="change_adminpin_res" size="60"></td>
+		</tr>
+		
+		
+		<script type="text/javascript">
+			//解锁用户口令
+			function unlock_userpin()
+			{
+				var keysn = form1.unlock_userpin_devicesn.value;
+				var oldAdminPin = form1.unlock_userpin_adminpin.value;
+				var newAdminPin = form1.unlock_userpin_newuserpin.value;
+				if (keysn == "") {
+					alert("请输入设备序列号!");
+					form1.unlock_userpin_devicesn.focus();
+					return ;
+				}
+				if (oldAdminPin == "") {
+					alert("请输入管理员口令!");
+					form1.unlock_userpin_adminpin.focus();
+					return ;
+				}
+				if (newAdminPin == "") {
+					alert("请输入新用户口令!");
+					form1.unlock_userpin_newuserpin.focus();
+					return ;
+				}
+				
+				var ret = XTXAPP.UnlockUserPass(keysn, oldAdminPin, newAdminPin);
+				if (ret) {
+					form1.unlock_userpin_res.value = "解锁用户口令成功";
+				} else {
+					form1.unlock_userpin_res.value = "解锁用户口令失败";
+				}	
+			}
+		</script>
+		<tr class="alt">
+			<td>解锁用户口令</td>
+			<td>
+				<table>
+					<tr> 
+						<td class="right"> 设备序列号: </td>
+						<td class="left"> 
+							<input type="text" name="unlock_userpin_devicesn", size="40"> 
+							<input type="button" value="获取设备序列号" name="get_keysn" onclick="return get_device_sn()">
+						</td>
+					</tr>
+					<tr>
+						<td class="right"> 管理员口令: </td>
+						<td class="left"> 
+							<input type="text" value="eEVUTXhFVE0=" name="unlock_userpin_adminpin" size="30">
+						</td>
+					</tr>
+					<tr>
+						<td class="right"> 新用户口令: </td>
+						<td class="left"> 
+							<input type="text" name="unlock_userpin_newuserpin" size="30">
+						</td>
+					</tr>
+					<tr> 
+						<td colspan="2"><input type="button" value="点击测试" name="unlock_userpin_btn" onclick="return unlock_userpin()"></td> 
+					<tr>
+				</table>
+			</td>
+		  <td><input type="text" name="unlock_userpin_res" size="60"></td>
+		</tr>
+		
+		<tr>
+			<td>解锁用户口令Ex</td>
+			<td>
+				<table>
+					<tr> 
+						<td class="right"> 设备序列号: </td>
+						<td class="left"> 
+							<input type="text" name="unlock_userpin_devicesn_ex", size="40"> 
+							<input type="button" value="获取设备序列号" name="get_keysn" onclick="return get_device_sn()">
+						</td>
+					</tr>
+					<tr>
+						<td class="right"> 管理员口令: </td>
+						<td class="left"> 
+							<input type="text" name="unlock_userpin_adminpin_ex"  size="30">
+						</td>
+					</tr>
+					<tr>
+						<td class="right"> 新用户口令: </td>
+						<td class="left"> 
+							<input type="text" name="unlock_userpin_newuserpin_ex" size="30">
+						</td>
+					</tr>
+					<tr> 
+						<td colspan="2"><input type="button" value="点击测试" name="unlock_userpin_btn_ex" onclick="return unlock_userpin_ex()"></td> 
+					<tr>
+				</table>
+			</td>
+		  <td><input type="text" name="unlock_userpin_res_ex" size="60"></td>
+		</tr>
+		
+		<script type="text/javascript">
+			//生成密钥对
+			function generate_keypair()
+			{
+				var keysn = form1.generate_keypair_devicesn.value;
+				var container = form1.generate_keypair_containerName.value;
+				var keytype = form1.generate_keypair_keytype.value;
+				var keypos = form1.generate_keypair_keyopt.value;
+				if (keysn == "") {
+					alert("请输入设备序列号!");
+					form1.generate_keypair_devicesn.focus();
+					return ;
+				}
+				if (container == "") {
+					alert("请输入容器名称!");
+					form1.generate_keypair_containerName.focus();
+					return ;
+				}
+				
+				var ret = XTXAPP.GenerateKeyPair(keysn, container, keytype, keypos);
+				if (ret) {
+					form1.generate_keypair_res.value = "生成密钥对成功";
+				} else {
+					form1.generate_keypair_res.value = "生成密钥对失败";
+				}	
+			}
+		</script>
+		<tr>
+			<td>生成密钥对</td>
+			<td>
+				<table>
+					<tr> 
+						<td class="right"> 设备序列号: </td>
+						<td class="left"> 
+							<input type="text" name="generate_keypair_devicesn", size="40"> 
+							<input type="button" value="获取设备序列号" name="get_keysn" onclick="return get_device_sn()">
+						</td>
+					</tr>
+					<tr>
+						<td class="right"> 容器名称: </td>
+						<td class="left"> 
+							<input type="text" name="generate_keypair_containerName" size="30">
+						</td>
+					</tr>
+					<tr>
+						<td class="right"> 密钥类型: </td>
+						<td class="left"> 
+							<select name="generate_keypair_keytype">
+								<option value="1">RSA_1024</option>
+								<option value="2">RSA_2048</option>
+								<option value="3">SM2_256</option>
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<td class="right"> 密钥位置: </td>
+						<td class="left"> 
+							<select name="generate_keypair_keyopt">
+								<option value=true>签名</option>
+								<option value=false>加密</option>
+							</select>
+						</td>
+					</tr>
+					<tr> 
+						<td colspan="2"><input type="button" value="点击测试" name="generate_keypair_btn" onclick="return generate_keypair()"></td> 
+					<tr>
+				</table>
+			</td>
+		  <td><input type="text" name="generate_keypair_res" size="60"></td>
+		</tr>
+		
+		<script type="text/javascript">
+			//导出公钥
+			function export_pubkey()
+			{
+				var keysn = form1.export_pubkey_devicesn.value;
+				var container = form1.export_pubkey_containerName.value;
+				var keypos = form1.export_pubkey_keyopt.value;
+				if (keysn == "") {
+					alert("请输入设备序列号!");
+					form1.export_pubkey_devicesn.focus();
+					return ;
+				}
+				if (container == "") {
+					alert("请输入容器名称!");
+					form1.export_pubkey_containerName.focus();
+					return ;
+				}
+				
+				var ret = XTXAPP.ExportPubKey(keysn, container, keypos);
+				alert(ret);
+				if (ret == "") {
+					form1.export_pubkey_res.value = "导出公钥失败";
+				} else {
+					form1.export_pubkey_res.value = ret;	
+				}		
+			}
+		</script>
+		<tr class="alt">
+			<td>导出公钥</td>
+			<td>
+				<table>
+					<tr> 
+						<td class="right"> 设备序列号: </td>
+						<td class="left"> 
+							<input type="text" name="export_pubkey_devicesn", size="40"> 
+							<input type="button" value="获取设备序列号" name="get_keysn" onclick="return get_device_sn()">
+						</td>
+					</tr>
+					<tr>
+						<td class="right"> 容器名称: </td>
+						<td class="left"> 
+							<input type="text" name="export_pubkey_containerName" size="30">
+						</td>
+					</tr>
+					<tr>
+						<td class="right"> 密钥位置: </td>
+						<td class="left"> 
+							<select name="export_pubkey_keyopt">
+								<option value=1>签名</option>
+								<option value=0>加密</option>
+							</select>
+						</td>
+					</tr>
+					<tr> 
+						<td colspan="2"><input type="button" value="点击测试" name="export_pubkey_btn" onclick="return export_pubkey()"></td> 
+					<tr>
+				</table>
+			</td>
+		  <td><textarea name="export_pubkey_res" cols="60" rows="10" ></textarea></td>
+		</tr>
+	
+		<script type="text/javascript">
+			//导出PKCS10请求
+			function export_pkcs10()
+			{
+				var keysn = form1.export_pkcs10_devicesn.value;
+				var container = form1.export_pkcs10_containerName.value;
+				var dn = form1.export_pkcs10_DN.value;
+				var keypos = form1.export_pkcs10_keyopt.value;
+				if (keysn == "") {
+					alert("请输入设备序列号!");
+					form1.export_pkcs10_devicesn.focus();
+					return ;
+				}
+				if (container == "") {
+					alert("请输入容器名称!");
+					form1.export_pkcs10_containerName.focus();
+					return ;
+				}
+				
+				var ret = XTXAPP.ExportPKCS10(keysn, container, dn, keypos);
+				if (ret == "") {
+					form1.export_pkcs10_res.value = "导出PKCS10请求失败";
+				} else {
+					form1.export_pkcs10_res.value = ret;	
+				}			
+			}
+		</script>
+		<tr>
+			<td>导出PKCS10证书请求</td>
+			<td>
+				<table>
+					<tr> 
+						<td class="right"> 设备序列号: </td>
+						<td class="left"> 
+							<input type="text" name="export_pkcs10_devicesn", size="40"> 
+							<input type="button" value="获取设备序列号" name="get_keysn" onclick="return get_device_sn()">
+						</td>
+					</tr>
+					<tr>
+						<td class="right"> 容器名称: </td>
+						<td class="left"> 
+							<input type="text" name="export_pkcs10_containerName" size="30">
+						</td>
+					</tr>
+					<tr>
+						<td class="right"> 请求DN: </td>
+						<td class="left"> 
+							<input type="text" name="export_pkcs10_DN" size="60">
+						</td>
+					</tr>
+					<tr>
+						<td class="right"> 密钥位置: </td>
+						<td class="left"> 
+							<select name="export_pkcs10_keyopt">
+								<option value=true>签名</option>
+								<option value=false>加密</option>
+							</select>
+						</td>
+					</tr>
+					<tr> 
+						<td colspan="2"><input type="button" value="点击测试" name="export_pkcs10_btn" onclick="return export_pkcs10()"></td> 
+					<tr>
+				</table>
+			</td>
+			<td><textarea name="export_pkcs10_res" cols="60" rows="10"></textarea></td>
+		</tr>
+		
+		
+		<script type="text/javascript">
+			//导入签名证书
+			function import_sign_cert()
+			{
+				var keysn = form1.import_sign_cert_devicesn.value;
+				var container = form1.import_sign_cert_containerName.value;
+				var cert = form1.import_sign_cert_cert.value;
+				if (keysn == "") {
+					alert("请输入设备序列号!");
+					form1.import_sign_cert_devicesn.focus();
+					return ;
+				}
+				if (container == "") {
+					alert("请输入容器名称!");
+					form1.import_sign_cert_containerName.focus();
+					return ;
+				}
+				if (cert == "") {
+					alert("请输入签名证书!");
+					form1.import_sign_cert_cert.focus();
+					return ;
+				}
+				
+				var ret = XTXAPP.ImportSignCert(keysn, container, cert);
+				if (ret) {
+					form1.import_sign_cert_res.value = "导入签名证书成功";	
+				} else {
+					form1.import_sign_cert_res.value = "导入签名证书失败";	
+				}
+				
+			}
+		</script>
+		<tr class="alt">
+			<td>导入签名证书</td>
+			<td>
+				<table>
+					<tr> 
+						<td class="right"> 设备序列号: </td>
+						<td class="left"> 
+							<input type="text" name="import_sign_cert_devicesn", size="40"> 
+							<input type="button" value="获取设备序列号" name="get_keysn" onclick="return get_device_sn()">
+						</td>
+					</tr>
+					<tr>
+						<td class="right"> 容器名称: </td>
+						<td class="left"> 
+							<input type="text" name="import_sign_cert_containerName" size="30">
+						</td>
+					</tr>
+					<tr>
+						<td class="right"> 签名证书: </td>
+						<td class="left"> 
+							<textarea name="import_sign_cert_cert" cols="60" rows="10" ></textarea>
+						</td>
+					</tr>
+					<tr> 
+						<td colspan="2"><input type="button" value="点击测试" name="import_sign_cert_btn" onclick="return import_sign_cert()"></td> 
+					<tr>
+				</table>
+			</td>
+			<td><input type="text" name="import_sign_cert_res" size="60"></td>
+		</tr>
+		
+		<script type="text/javascript">
+			//导入加密证书和加密密钥对
+			function import_enc_cert()
+			{
+				var keysn = form1.import_enc_cert_devicesn.value;
+				var container = form1.import_enc_cert_containerName.value;
+				var cert = form1.import_enc_cert_cert.value;
+				var key = form1.import_enc_cert_keypair.value;
+				if (keysn == "") {
+					alert("请输入设备序列号!");
+					form1.import_enc_cert_devicesn.focus();
+					return ;
+				}
+				if (container == "") {
+					alert("请输入容器名称!");
+					form1.import_enc_cert_containerName.focus();
+					return ;
+				}
+				/*
+				if (cert == "") {
+					alert("请输入加密证书!");
+					form1.import_enc_cert_cert.focus();
+					return ;
+				}
+				*/
+				var ret = XTXAPP.ImportEncCertEx(keysn, container, cert, key, 0x201);
+				if (ret) {
+					form1.import_enc_cert_res.value = "导入加密证书成功";	
+				} else {
+					form1.import_enc_cert_res.value = "导入加密证书失败";	
+				}
+				
+			}
+		</script>
+		<tr>
+			<td>导入加密证书（加密密钥对）</td>
+			<td>
+				<table>
+					<tr> 
+						<td class="right"> 设备序列号: </td>
+						<td class="left"> 
+							<input type="text" name="import_enc_cert_devicesn", size="40"> 
+							<input type="button" value="获取设备序列号" name="get_keysn" onclick="return get_device_sn()">
+						</td>
+					</tr>
+					<tr>
+						<td class="right"> 容器名称: </td>
+						<td class="left"> 
+							<input type="text" name="import_enc_cert_containerName" size="30">
+						</td>
+					</tr>
+					<tr>
+						<td class="right"> 加密证书: </td>
+						<td class="left"> 
+							<textarea name="import_enc_cert_cert" cols="60" rows="10" ></textarea>
+						</td>
+					</tr>
+					<tr>
+						<td class="right"> 加密密钥对: </td>
+						<td class="left"> 
+							<textarea name="import_enc_cert_keypair" cols="60" rows="5" ></textarea>
+						</td>
+					</tr>
+					<tr> 
+						<td colspan="2"><input type="button" value="点击测试" name="import_enc_cert_btn" onclick="return import_enc_cert()"></td> 
+					<tr>
+				</table>
+			</td>
+			<td><input type="text" name="import_enc_cert_res" size="60"></td>
+		</tr>
+		
+		<script type="text/javascript">
+			//写文件
+			function write_file()
+			{
+				var keysn = form1.write_file_devicesn.value;
+				var fileName = form1.write_file_name.value;
+				var content = form1.write_file_content.value;
+
+				if (keysn == "") {
+					alert("请输入设备序列号!");
+					form1.write_file_devicesn.focus();
+					return ;
+				}
+				if (fileName == "") {
+					alert("请输入文件名称!");
+					form1.write_file_name.focus();
+					return ;
+				}
+				/*
+				if (content == "") {
+					alert("请输入写入的内容!");
+					form1.write_file_content.focus();
+					return ;
+				}
+				*/
+				var ret = XTXAPP.WriteFile(keysn, fileName, content, false);
+				if (ret) {
+					form1.write_file_res.value = "写文件成功";	
+				} else {
+					form1.write_file_res.value = "写文件失败";	
+				}		
+			}
+		</script>	
+		<tr class="alt">
+			<td>写文件测试</td>
+			<td>
+				<table>
+					<tr> 
+						<td class="right"> 设备序列号: </td>
+						<td class="left"> 
+							<input type="text" name="write_file_devicesn", size="40"> 
+							<input type="button" value="获取设备序列号" name="get_keysn" onclick="return get_device_sn()">
+						</td>
+					</tr>
+					<tr>
+						<td class="right"> 文件名称: </td>
+						<td class="left"> 
+							<input type="text" name="write_file_name" size="30">
+						</td>
+					</tr>
+					<tr>
+						<td class="right"> 写入内容: </td>
+						<td class="left"> 
+							<textarea name="write_file_content" cols="60" rows="5" ></textarea>
+						</td>
+					</tr>
+					<tr> 
+						<td colspan="2"><input type="button" value="点击测试" name="write_file_btn" onclick="return write_file()"></td> 
+					<tr>
+				</table>
+			</td>
+			<td><input type="text" name="write_file_res" size="60"></td>
+		</tr>
+		
+		<script type="text/javascript">
+			//枚举文件
+			function enum_files()
+			{
+				var keysn = form1.enum_files_devicesn.value;
+
+				if (keysn == "") {
+					alert("请输入设备序列号!");
+					form1.enum_files_devicesn.focus();
+					return ;
+				}
+
+				var ret = XTXAPP.EnumFilesInDevice(keysn);
+				if (ret) {
+					form1.enum_files_res.value = ret;	
+				} else {
+					form1.enum_files_res.value = "设备内不存在文件";	
+				}		
+			}
+		</script>	
+		<tr class="alt">
+			<td>枚举文件测试</td>
+			<td>
+				<table>
+					<tr> 
+						<td class="right"> 设备序列号: </td>
+						<td class="left"> 
+							<input type="text" name="enum_files_devicesn", size="40"> 
+							<input type="button" value="获取设备序列号" name="get_keysn" onclick="return get_device_sn()">
+						</td>
+					</tr>
+					<tr> 
+						<td colspan="2"><input type="button" value="点击测试" name="enum_files_btn" onclick="return enum_files()"></td> 
+					<tr>
+				</table>
+			</td>
+			<td><input type="text" name="enum_files_res" size="60"></td>
+		</tr>
+		
+		<script type="text/javascript">
+			//读文件
+			function read_file()
+			{
+				var keysn = form1.read_file_devicesn.value;
+				var fileName = form1.read_file_name.value;
+
+				if (keysn == "") {
+					alert("请输入设备序列号!");
+					form1.read_file_devicesn.focus();
+					return ;
+				}
+				if (fileName == "") {
+					alert("请输入文件名称!");
+					form1.read_file_name.focus();
+					return ;
+				}
+				
+				var ret = XTXAPP.ReadFile(keysn, fileName);
+				if (ret != "") {
+					form1.read_file_content.value = ret;	
+				} else {
+					form1.read_file_content.value = "读取到的数据为空";	
+				}		
+			}
+		</script>	
+		<tr>
+			<td>读文件测试</td>
+			<td>
+				<table>
+					<tr> 
+						<td class="right"> 设备序列号: </td>
+						<td class="left"> 
+							<input type="text" name="read_file_devicesn", size="40"> 
+							<input type="button" value="获取设备序列号" name="get_keysn" onclick="return get_device_sn()">
+						</td>
+					</tr>
+					<tr>
+						<td class="right"> 文件名称: </td>
+						<td class="left"> 
+							<input type="text" name="read_file_name" size="30">
+						</td>
+					</tr>
+					<tr> 
+						<td colspan="2"><input type="button" value="点击测试" name="read_file_btn" onclick="return read_file()"></td> 
+					<tr>
+				</table>
+			</td>
+			<td><textarea name="read_file_content" id="read_file_content" cols="60" rows="5" ></textarea></td>
+		</tr>
+		
+		<script type="text/javascript">
+			//写Base64编码的文件
+			function write_fileex()
+			{
+				var keysn = form1.write_file_devicesnex.value;
+				var fileName = form1.write_file_nameex.value;
+				var content = form1.write_file_contentex.value;
+
+				if (keysn == "") {
+					alert("请输入设备序列号!");
+					form1.write_file_devicesnex.focus();
+					return ;
+				}
+				if (fileName == "") {
+					alert("请输入文件名称!");
+					form1.write_file_nameex.focus();
+					return ;
+				}
+				if (content == "") {
+					alert("请输入写入的内容!");
+					form1.write_file_contentex.focus();
+					return ;
+				}
+				
+				var ret = XTXAPP.WriteFileEx(keysn, fileName, content);
+				if (ret) {
+					form1.write_file_resex.value = "写文件成功";	
+				} else {
+					form1.write_file_resex.value = "写文件失败";	
+				}		
+			}
+		</script>	
+		<tr class="alt">
+			<td>写文件Ex测试</td>
+			<td>
+				<table>
+					<tr> 
+						<td class="right"> 设备序列号: </td>
+						<td class="left"> 
+							<input type="text" name="write_file_devicesnex", size="40"> 
+							<input type="button" value="获取设备序列号" name="get_keysn" onclick="return get_device_sn()">
+						</td>
+					</tr>
+					<tr>
+						<td class="right"> 文件名称: </td>
+						<td class="left"> 
+							<input type="text" name="write_file_nameex" size="30">
+						</td>
+					</tr>
+					<tr>
+						<td class="right"> 写入内容: </td>
+						<td class="left"> 
+							<textarea name="write_file_contentex" cols="60" rows="5" ></textarea>
+						</td>
+					</tr>
+					<tr> 
+						<td colspan="2"><input type="button" value="点击测试" name="write_file_btnex" onclick="return write_fileex()"></td> 
+					<tr>
+				</table>
+			</td>
+			<td><input type="text" name="write_file_resex" size="60"></td>
+		</tr>
+		
+		<script type="text/javascript">
+			//读Base64编码文件
+			function read_fileex()
+			{
+				var keysn = form1.read_file_devicesnex.value;
+				var fileName = form1.read_file_nameex.value;
+
+				if (keysn == "") {
+					alert("请输入设备序列号!");
+					form1.read_file_devicesnex.focus();
+					return ;
+				}
+				if (fileName == "") {
+					alert("请输入文件名称!");
+					form1.read_file_nameex.focus();
+					return ;
+				}
+				
+				var ret = XTXAPP.ReadFileEx(keysn, fileName);
+				if (ret != "") {
+					form1.read_file_contentex.value = ret;	
+				} else {
+					form1.read_file_contentex.value = "读取到的数据为空";	
+				}		
+			}
+		</script>	
+		<tr>
+			<td>读文件Ex测试</td>
+			<td>
+				<table>
+					<tr> 
+						<td class="right"> 设备序列号: </td>
+						<td class="left"> 
+							<input type="text" name="read_file_devicesnex", size="40"> 
+							<input type="button" value="获取设备序列号" name="get_keysn" onclick="return get_device_sn()">
+						</td>
+					</tr>
+					<tr>
+						<td class="right"> 文件名称: </td>
+						<td class="left"> 
+							<input type="text" name="read_file_nameex" size="30">
+						</td>
+					</tr>
+					<tr> 
+						<td colspan="2"><input type="button" value="点击测试" name="read_file_btnex" onclick="return read_fileex()"></td> 
+					<tr>
+				</table>
+			</td>
+			<td><textarea name="read_file_contentex" id="read_file_contentex" cols="60" rows="5" ></textarea></td>
+		</tr>
+		
+		<script type="text/javascript">
+			//获取容器数量
+			function get_ContainerCount()
+			{
+				var keysn = form1.get_ContainerCount_devicesn.value;
+				/*
+				if (keysn == "") {
+					alert("请输入设备序列号!");
+					form1.get_ContainerCount_devicesn.focus();
+					return ;
+				}
+				*/
+				form1.get_ContainerCount_res.value = XTXAPP.GetContainerCount(keysn);
+			}
+		</script>	
+		<tr class="alt">
+			<td>获取容器数量</td>
+			<td>
+				<table>
+					<tr> 
+						<td class="right"> 设备序列号: </td>
+						<td class="left"> 
+							<input type="text" name="get_ContainerCount_devicesn", size="40"> 
+							<input type="button" value="获取设备序列号" name="get_keysn" onclick="return get_device_sn()">
+						</td>
+					</tr>
+					<tr> 
+						<td colspan="2"><input type="button" value="点击测试" name="get_ContainerCount_btn" onclick="return get_ContainerCount()"></td> 
+					<tr>
+				</table>
+			</td>
+			<td><input type="text" name="get_ContainerCount_res" size="60"></td>
+		</tr>
+		
+		<script type="text/javascript">
+			//判断容器是否存在
+			function isContainerExist()
+			{
+				var keysn = form1.isContainerExist_devicesn.value;
+				var container = form1.isContainerExist_containerName.value;
+
+				if (keysn == "") {
+					alert("请输入设备序列号!");
+					form1.isContainerExist_containerName.focus();
+					return ;
+				}
+				if (container == "") {
+					alert("请输入容器名称!");
+					form1.isContainerExist_containerName.focus();
+					return ;
+				}
+				
+				var ret = XTXAPP.IsContainerExist(keysn, container);
+				if (ret) {
+					form1.isContainerExist_res.value = "容器" + container + "存在";		
+				} else {
+					form1.isContainerExist_res.value = "容器" + container + "不存在";		
+				}
+			}
+		</script>	
+		<tr>
+			<td>判断容器是否存在</td>
+			<td>
+				<table>
+					<tr> 
+						<td class="right"> 设备序列号: </td>
+						<td class="left"> 
+							<input type="text" name="isContainerExist_devicesn", size="40"> 
+							<input type="button" value="获取设备序列号" name="get_keysn" onclick="return get_device_sn()">
+						</td>
+					</tr>
+					<tr>
+						<td class="right"> 容器名称: </td>
+						<td class="left"> 
+							<input type="text" name="isContainerExist_containerName" size="30">
+						</td>
+					</tr>
+					<tr> 
+						<td colspan="2"><input type="button" value="点击测试" name="isContainerExist_btn" onclick="return isContainerExist()"></td> 
+					<tr>
+				</table>
+			</td>
+			<td><input type="text" name="isContainerExist_res" size="60"></td>
+		</tr>
+		
+		
+		<script type="text/javascript">
+			//删除容器
+			function del_container()
+			{
+				var keysn = form1.del_container_devicesn.value;
+				var container = form1.del_container_containerName.value;
+
+				if (keysn == "") {
+					alert("请输入设备序列号!");
+					form1.del_container_devicesn.focus();
+					return ;
+				}
+				if (container == "") {
+					alert("请输入容器名称!");
+					form1.del_container_containerName.focus();
+					return ;
+				}
+				
+				var ret = XTXAPP.DeleteContainer(keysn, container);
+				if (ret) {
+					form1.del_container_res.value = "删除容器" + container + "成功";		
+				} else {
+					form1.del_container_res.value = "删除容器" + container + "失败";		
+				}
+			}
+		</script>	
+		<tr class="alt">
+			<td>删除容器</td>
+			<td>
+				<table>
+					<tr> 
+						<td class="right"> 设备序列号: </td>
+						<td class="left"> 
+							<input type="text" name="del_container_devicesn", size="40"> 
+							<input type="button" value="获取设备序列号" name="get_keysn" onclick="return get_device_sn()">
+						</td>
+					</tr>
+					<tr>
+						<td class="right"> 容器名称: </td>
+						<td class="left"> 
+							<input type="text" name="del_container_containerName" size="30">
+						</td>
+					</tr>
+					<tr> 
+						<td colspan="2"><input type="button" value="点击测试" name="del_container_btn" onclick="return del_container()"></td> 
+					<tr>
+				</table>
+			</td>
+			<td><input type="text" name="del_container_res" size="60"></td>
+		</tr>
+		
+		<script type="text/javascript">
+			//删除容器
+			function del_oldcontainer()
+			{
+				var keysn = form1.del_oldcontainer_devicesn.value;
+
+				if (keysn == "") {
+					alert("请输入设备序列号!");
+					form1.del_container_devicesn.focus();
+					return ;
+				}
+				
+				var ret = XTXAPP.DeleteOldContainer(keysn);
+				if (ret) {
+					form1.del_oldcontainer_res.value = "删除最旧容器成功";		
+				} else {
+					form1.del_oldcontainer_res.value = "删除最旧容器失败";		
+				}
+			}
+		</script>	
+		<tr class="alt">
+			<td>删除最旧容器</td>
+			<td>
+				<table>
+					<tr> 
+						<td class="right"> 设备序列号: </td>
+						<td class="left"> 
+							<input type="text" name="del_oldcontainer_devicesn", size="40"> 
+							<input type="button" value="获取设备序列号" name="get_keysn" onclick="return get_device_sn()">
+						</td>
+					</tr>
+					<tr> 
+						<td colspan="2"><input type="button" value="点击测试" name="del_oldcontainer_btn" onclick="return del_oldcontainer()"></td> 
+					<tr>
+				</table>
+			</td>
+			<td><input type="text" name="del_oldcontainer_res" size="60"></td>
+		</tr>
+		
+		<script type="text/javascript">
+			//SetENVSN
+			function set_envsn()
+			{
+				var keysn = form1.set_envsn_devicesn.value;
+				var envsn = form1.set_envsn_envsn.value;
+
+				if (keysn == "") {
+					alert("请输入设备序列号!");
+					form1.set_envsn_devicesn.focus();
+					return ;
+				}
+				/*if (envsn == "") {
+					alert("请输入ENVSN!");
+					form1.set_envsn_envsn.focus();
+					return ;
+				}
+				*/
+				var ret = XTXAPP.SetENVSN(keysn, envsn);
+				if (ret) {
+					form1.set_envsn_res.value = "写ENVSN成功";	
+				} else {
+					form1.set_envsn_res.value = "写ENVSN失败";	
+				}		
+			}
+		</script>
+		<tr>
+			<td>写入ENVSN</td>
+			<td>
+				<table>
+					<tr> 
+						<td class="right"> 设备序列号: </td>
+						<td class="left"> 
+							<input type="text" name="set_envsn_devicesn", size="40"> 
+							<input type="button" value="获取设备序列号" name="get_keysn" onclick="return get_device_sn()">
+						</td>
+					</tr>
+					<tr>
+						<td class="right"> ENVSN: </td>
+						<td class="left"> 
+							<input type="text" name="set_envsn_envsn" size="30">
+						</td>
+					</tr>
+					<tr> 
+						<td colspan="2"><input type="button" value="点击测试" name="set_envsn_btn" onclick="return set_envsn()"></td> 
+					<tr>
+				</table>
+			</td>
+			<td><input type="text" name="set_envsn_res" size="60"></td>
+		</tr>
+		
+		<script type="text/javascript">
+			//读ENVSN
+			function read_envsn()
+			{
+				var keysn = form1.read_envsn_devicesn.value;
+
+				if (keysn == "") {
+					alert("请输入设备序列号!");
+					form1.read_envsn_devicesn.focus();
+					return ;
+				}
+				
+				var ret = XTXAPP.GetENVSN(keysn);
+				if (ret != "") {
+					form1.read_envsn_res.value = ret;	
+				} else {
+					form1.read_envsn_res.value = "读取的ENVSN为空";	
+				}	
+			}
+		</script>	
+		<tr class="alt">
+			<td>读取ENVSN</td>
+			<td>
+				<table>
+					<tr> 
+						<td class="right"> 设备序列号: </td>
+						<td class="left"> 
+							<input type="text" name="read_envsn_devicesn", size="40"> 
+							<input type="button" value="获取设备序列号" name="get_keysn" onclick="return get_device_sn()">
+						</td>
+					</tr>
+					<tr> 
+						<td colspan="2"><input type="button" value="点击测试" name="read_envsn_btn" onclick="return read_envsn()"></td> 
+					<tr>
+				</table>
+			</td>
+			<td><input type="text" name="read_envsn_res" size="60"></td>
+		</tr>
+		
+		<script type="text/javascript">
+			//解锁用户口令
+			function unlock_userpin_ex()
+			{
+				var keysn = form1.unlock_userpin_devicesn_ex.value;
+				var oldAdminPin = form1.unlock_userpin_adminpin_ex.value;
+				var newAdminPin = form1.unlock_userpin_newuserpin_ex.value;
+				if (keysn == "") {
+					alert("请输入设备序列号!");
+					form1.unlock_userpin_devicesn_ex.focus();
+					return ;
+				}
+				if (oldAdminPin == "") {
+					alert("请输入管理员口令!");
+					form1.unlock_userpin_adminpin_ex.focus();
+					return ;
+				}
+				if (newAdminPin == "") {
+					alert("请输入新用户口令!");
+					form1.unlock_userpin_newuserpin_ex.focus();
+					return ;
+				}
+				
+				var ret = XTXAPP.UnlockUserPassEx(keysn, oldAdminPin, newAdminPin);
+				if (ret) {
+					form1.unlock_userpin_res_ex.value = "解锁用户口令成功";
+				} else {
+					form1.unlock_userpin_res_ex.value = "解锁用户口令失败";
+				}	
+			}
+		</script>
+		
+		<script type="text/javascript">
+			//获取所有容器名
+			function get_all_container()
+			{
+				var keysn = form1.getallcontainer_devicesn.value;
+
+				if (keysn == "") {
+					alert("请输入设备序列号!");
+					form1.getallcontainer_devicesn.focus();
+					return ;
+				}
+				
+				var ret = XTXAPP.SOF_GetAllContainerName(keysn);
+				if (ret != "") {
+					form1.getallcontainer_res.value = ret;	
+				} else {
+					form1.getallcontainer_res.value = "该设备中不包含容器";	
+				}	
+			}
+		</script>	
+		<tr class="alt">
+			<td>获取所有容器</td>
+			<td>
+				<table>
+					<tr> 
+						<td class="right"> 设备序列号: </td>
+						<td class="left"> 
+							<input type="text" name="getallcontainer_devicesn", size="40"> 
+							<input type="button" value="获取设备序列号" name="get_keysn" onclick="return get_device_sn()">
+						</td>
+					</tr>
+					<tr> 
+						<td colspan="2"><input type="button" value="点击测试" name="getallcontainer_btn" onclick="return get_all_container()"></td> 
+					<tr>
+				</table>
+			</td>
+			<td><input type="text" name="getallcontainer_res" size="60"></td>
+		</tr>
+		
+		<tr>
+			<th colspan="3">SOF接口测试</th>
+		</tr>
+		
+		<script type="text/javascript">
+			//获取接口版本信息
+			function sof_getversion()
+			{
+				var version = XTXAPP.SOF_GetVersion();
+				if (version != "") {
+					form1.sof_getversion_res.value = version;
+				} else {
+					form1.sof_getversion_res.value = "获取到的版本信息为空";
+				}		
+			}
+		</script>
+		<tr class="alt">
+			<td>获取接口版本信息</td>
+			<td><input type="button" value="点击测试" name="sof_getversion_btn" onclick="return sof_getversion()"></td>
+			<td><input type="text" name="sof_getversion_res" size="60"></td>
+		</tr>
+		
+		<script type="text/javascript">
+			//获取最后一次出错错误码和错误描述
+			function sof_getlasterror()
+			{
+				var code = XTXAPP.SOF_GetLastError();
+				var msg = XTXAPP.SOF_GetLastErrMsg();
+				
+				form1.sof_getlasterror_res1.value = "错误码为[" + code + "]";
+				form1.sof_getlasterror_res2.value = "错误描述为[" + msg + "]";
+			}
+		</script>
+		<tr>
+			<td>获取错误描述信息</td>
+			<td><input type="button" value="点击测试" name="sof_lasterror_btn" onclick="return sof_getlasterror()"></td>
+			<td>
+				<table>
+					<tr><input type="text" name="sof_getlasterror_res1" size="60"></tr> 
+					<tr><input type="text" name="sof_getlasterror_res2" size="60"></tr> 
+				</table>
+			</td>
+		</tr>
+		<script type="text/javascript">
+			//获取用户列表
+			function sof_getuserlst()
+			{
+				var usrlst = XTXAPP.SOF_GetUserList();
+				if (usrlst != "") {
+					form1.sof_getuserlst_res.value = usrlst;
+				} else {
+					form1.sof_getuserlst_res.value = "获取到的用户列表为空";
+				}		
+			}
+		</script>	
+		<tr class="alt">
+			<td>获取用户列表</td>
+			<td><input type="button" value="点击测试" name="sof_getuserlst_btn" onclick="return sof_getuserlst()"></td>
+			<td><textarea name="sof_getuserlst_res" id="sof_getuserlst_res" cols="60" rows="5"></textarea></td>
+		</tr>
+		
+		<script type="text/javascript">
+			//导出用户证书
+			function sof_export_usercert()
+			{
+				var certid = form1.sof_export_usercert_certid.value;
+				
+				if (certid == "") {
+					alert("请插入CERTID");
+					form1.sof_export_usercert_certid.focus();
+					return;
+				}
+				var cert = XTXAPP.SOF_ExportUserCert(certid);
+				if (cert != "") {
+					form1.sof_export_usercert_res.value = cert;
+				} else {
+					form1.sof_export_usercert_res.value = "获取到的用户证书为空";
+				}
+			}
+			var cur_cert_id = "";
+			function get_cert_id()
+			{
+				var usrlst = XTXAPP.SOF_GetUserList();
+				while (usrlst != "") {
+					var i = usrlst.indexOf("&&&");
+					var left = usrlst.substring(0, i);
+					var right = usrlst.substring(i + 3, usrlst.length);
+					var j = left.indexOf("||");
+					var name = left.substring(0, j);
+					var container = left.substring(j + 2, left.length);
+					if (cur_cert_id != container) {
+						cur_cert_id = container;
+						break;
+					}
+					usrlst = right;
+				}
+				form1.sof_export_usercert_certid.value = cur_cert_id;	
+				form1.sof_export_user_enccert_certid.value = cur_cert_id;	
+				form1.sof_login_certid.value = cur_cert_id;	
+				form1.sof_logout_certid.value = cur_cert_id;
+				form1.sof_change_passwd_certid.value = cur_cert_id;	
+				form1.sof_get_retrycount_certid.value = cur_cert_id;	
+				form1.sof_sign_verify_certid.value = cur_cert_id;	
+				form1.sof_sign_verify_file_certid.value = cur_cert_id;	
+				//form1.sof_genrandom_certid.value = cur_cert_id;	
+				form1.pkcs7_sign_verify_certid.value = cur_cert_id;
+				form1.pkcs7_enc_dec_certid.value = cur_cert_id;
+				form1.xml_sign_verify_certid.value = cur_cert_id;
+				form1.pub_enc_pri_dec_certid.value = cur_cert_id;
+				form1.otp_getchallengecode_certid.value = cur_cert_id;
+				form1.sof_update_cert_certid.value = cur_cert_id;
+			}
+		</script>	
+		<tr>
+			<td>导出用户证书</td>
+			<td>
+				<table>
+					<tr> 
+						<td class="right"> CERTID: </td>
+						<td class="left"> 
+							<input type="text" name="sof_export_usercert_certid" size="40">
+							<input type="button" value="获取CERTID" name="get_keysn" onclick="return get_cert_id()">
+						</td>
+					</tr>
+					<tr> 
+						<td colspan="2"><input type="button" value="点击测试" name="sof_export_usercert_btn" onclick="return sof_export_usercert()"></td> 
+					<tr>
+				</table>
+			</td>
+			<td><textarea name="sof_export_usercert_res" cols="60" rows="10" ></textarea></td>
+		</tr>
+		
+		<script type="text/javascript">
+			//导出用户加密证书
+			function sof_export_user_enccert()
+			{
+				var certid = form1.sof_export_user_enccert_certid.value;
+				
+				if (certid == "") {
+					alert("请插入CERTID");
+					form1.sof_export_user_enccert_certid.focus();
+					return;
+				}
+				var cert = XTXAPP.SOF_ExportExChangeUserCert(certid);
+				if (cert != "") {
+					form1.sof_export_user_enccert_res.value = cert;
+				} else {
+					form1.sof_export_user_enccert_res.value = "获取到的用户加密证书为空";
+				}
+			}
+		</script>
+		<tr class="alt">
+			<td>导出用户加密证书</td>
+			<td>
+				<table>
+					<tr> 
+						<td class="right"> CERTID: </td>
+						<td class="left"> 
+							<input type="text" name="sof_export_user_enccert_certid" size="40">
+							<input type="button" value="获取CERTID" name="get_keysn" onclick="return get_cert_id()">
+						</td>
+					</tr>
+					<tr> 
+						<td colspan="2"><input type="button" value="点击测试" name="sof_export_user_enccert_btn" onclick="return sof_export_user_enccert()"></td> 
+					<tr>
+				</table>
+			</td>
+			<td><textarea name="sof_export_user_enccert_res" cols="60" rows="10" ></textarea></td>
+		</tr>	
+		
+		<script type="text/javascript">
+			//验证证书
+			function sof_validatecert()
+			{
+				var cert = form1.sof_validatecert_cert.value;
+				
+				if (cert == "") {
+					alert("请输入证书");
+					form1.sof_validatecert_cert.focus();
+					return;
+				}
+				var ret = XTXAPP.SetUserConfig(6, "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");
+				alert(ret);
+				//var ret = XTXAPP.SetUserConfig(6, "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");
+				//alert(ret);
+				//ret = XTXAPP.SetUserConfig(5, "1234");
+				//alert(ret);
+				//ret = XTXAPP.SetUserConfig(6, "MIIFfAYJKoZIhvcNAQcCoIIFbTCCBWkCAQExADALBgkqhkiG9w0BBwGgggVRMIIDhjCCAu+gAwIBAgIEAQAAEDANBgkqhkiG9w0BAQQFADAmMREwDwYDVQQKEwhVbml0ZWRDQTERMA8GA1UEAxMIVUNBIFJPT1QwHhcNMDEwNjAxMDAwMDAwWhcNMTAxMjMxMjM1OTU5WjBnMQ0wCwYDVQQGHgQAQwBOMREwDwYDVQQKHggAQgBKAEMAQTEXMBUGA1UECB4OAEIAZQBpAGoAaQBuAGcxETAPBgNVBAMeCABCAEoAQwBBMRcwFQYDVQQHHg4AQgBlAGkASgBpAG4AZzCBnzANBgkqhkiG9w0BAQEFAAOBjQAwgYkCgYEAnnXTNZHKazrPsm/MyRAbSxtLYXMLJbFFdjLlqx5orCqrgRgTm9ruPZFL37H9ypJra29PGsdcMeJ9AEJuyHaPRN4fAcN1dz9N2zb0b+Nd27LRcCyAEuuYTkiBPi5Y3VyK7WxX5aJPiW6tdeg7yGfvjcpatTBhs71KZTiLbITwqF8CAwEAAaOCAX4wggF6MEoGA1UdIARDMEEwPwYIKoEcAcU4gRUwMzAxBggrBgEFBQcCARYlaHR0cDovL3d3dy5iamNhLm9yZy5jbi9wb2xpY3kvQkVJSklORzALBgNVHQ8EBAMCAQYwDwYDVR0TBAgwBgEB/wIBADARBglghkgBhvhCAQEEBAMCAQYwPQYDVR0fBDYwNDAyoDCgLoYsTERBUDovL2xkYXAuYmpjYS5vcmcuY246Mzg5L1JBMTAwMC9zdWJjYS5jcmwwKAYIYIZIAYb4RAQEHE9DU1A6Ly9vY3NwLmJqY2Eub3JnLmNuOjkwMTIwgZEGBiqBHAHFOASBhjCBgzAuBggqgRwBxTiBEQQiaHR0cDovL1NlcnZpY2UuYmpjYS5vcmcuY24vQkVJSklORzAnBggqgRwBxTiBEAQbTERBUDovL2xkYXAuYmpjYS5vcmcuY246Mzg5MCgGCCqBHAHFOIESBBxPQ1NQOi8vb2NzcC5iamNhLm9yZy5jbjo5MDEyMA0GCSqGSIb3DQEBBAUAA4GBACOfT6yEyw3G8bKDY99LZzvsxe0crFK/Zjx5tTQnvymlaT/YIw9A6lBHR3FIN8/h/Uor35SrKetrUQsAg69gKNzHt2r1CUFRPb36DpmibuxEJmPAOGIdfuDwjfB7N9RC6tTE5KG7tfWakhl0ZoHNGyoqu/MQJcRZvEZGUAxoeakyMIIBwzCCASygAwIBAAIEAQAAADANBgkqhkiG9w0BAQQFADAmMREwDwYDVQQKEwhVbml0ZWRDQTERMA8GA1UEAxMIVUNBIFJPT1QwHhcNMDEwMTAxMDAwMDAwWhcNMTIxMjMxMjM1OTU5WjAmMREwDwYDVQQKEwhVbml0ZWRDQTERMA8GA1UEAxMIVUNBIFJPT1QwgZ8wDQYJKoZIhvcNAQEBBQADgY0AMIGJAoGBAM6d2rt9EiwWHHTHW+cdivcB/mVyJ2KEouerDwEl777POlvOTPiobmCsYrCwiJ/h2+weqfjcPA+HvddJQqsovEdF2P8LYuOVLqewKp79f4kaN73F2rIxL2NGfkflcAAbTYgzZgpkFIGx0m+eYlbxXIk5ECFKaRi9lTwHifi9ftxTAgMBAAEwDQYJKoZIhvcNAQEEBQADgYEAxIyLqPMoabPdPMQskZvBk80xstaxjIT0HTtwTZLUt2FyupUFKvtf0Nel2i1gKQTxj0EP5rxep/2jlBDNQht34h8nE/ZUW/jzrDfl4Z7EFQwcAPsJzIVp1+zO16ZPihbL67CSjMEZUCdJcTpSb75TKLYsh8TFzh/rF8H9YQhg+mExAA==");
+				//alert(ret);
+				//var ret = XTXAPP.SetUserConfig(4, "MIIEiDCCA3CgAwIBAgIKEAAAAAAAAAIAAjANBgkqhkiG9w0BAQUFADBaMQswCQYDVQQGEwJDTjENMAsGA1UECgwEQkpDQTEdMBsGA1UECwwUUHVibGljIFRydXN0IFJvb3QgQ0ExHTAbBgNVBAMMFFB1YmxpYyBUcnVzdCBSb290IENBMB4XDTA1MDEwMTA4MDAwMFoXDTI0MTIzMTA4MDAwMFowUjELMAkGA1UEBhMCQ04xDTALBgNVBAoMBEJKQ0ExGDAWBgNVBAsMD1B1YmxpYyBUcnVzdCBDQTEaMBgGA1UEAwwRUHVibGljIFRydXN0IENBLTEwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQC8HFQIaqUVTNX9mSB7Ymn7bKz6pjckK/N4iLaC2wDvL/OcAAnctU8BZ6Ootv2TiS7mtdIT636eN23kvGy4mWrL3a2kCS+NQwk6Xh7gW1VB9lvNDu1KpjxZ7KKncpfyHgedxSWQAQQewixNVgLNU3S60waxFQ4ppjixYJXhSacqxvDVeR79vYX/FxAi0pWJ+tmbvBpDsr4A4k89LdeE8AafErGL8GM/Kji+rSTVoMSrG04JrzXXDxEYPeAEemcOn4WqwfDFkg/wcIvLmdUbackBRmfR5Sbge5yKUEt/JBOfv5BmHu34zFrU8BUXMz1uQcfc37VyIYEMQGGl1R5obOTnAgMBAAGjggFWMIIBUjAfBgNVHSMEGDAWgBRgV2OcMBtwogEDmdLaNvRpCMA8pTAdBgNVHQ4EFgQUrDvsrwyjUA7vr6+0T2w729FX0okwDAYDVR0PBAUDAwcGADA/BgNVHSAEODA2MDQGADAwMC4GCCsGAQUFBwIBFiJodHRwOi8vd3d3LmJqY2Eub2cuY24vY3BzL2Nwcy5odG1sMA8GA1UdEwQIMAYBAf8CAQIwga8GA1UdHwSBpzCBpDBzoHGgb6RtMGsxCzAJBgNVBAYTAkNOMQ0wCwYDVQQKDARCSkNBMR0wGwYDVQQLDBRQdWJsaWMgVHJ1c3QgUm9vdCBDQTEdMBsGA1UEAwwUUHVibGljIFRydXN0IFJvb3QgQ0ExDzANBgNVBAMTBnB0cm9vdDAtoCugKYYnaHR0cDovL2xkYXAuYmpjYS5vcmcuY24vYXJsL3B0cm9vdC5jcmwgMA0GCSqGSIb3DQEBBQUAA4IBAQBzt6iN086M2tHqf86Iz9moALhCWgtY3LD0INjedUahaOXwl0lg2Q4iKes7D+UDee9A/DFM1AmVH2WVkZYlouG8zkILtSpBJVTQVVWct3gtGMw0pqUrBE+cNrMXT3GdHlwF64FjyDG8xgSwzLxzkMnv+EMpHqGxGvik2kx/47Sb6KTTSwC4O0vqhesJwQpfHh4eqkl8/caTzae8N3uEPiI++PEGu8iskmU//2LIuxvRITdi0yaYZ3xIe1gYYW38XsiupjCePf8MGX6Ltow5oAPe9xhisujFWWdk5pUkpyQCSQFlYjIE0ZZEkwTc6KEXY5C0rMAORiY0bt5ZoZAgjT9k");
+				//alert(ret);
+				//ret = XTXAPP.SetUserConfig(4, "MIIDdTCCAl2gAwIBAgIKEAAAAAAAAAIAATANBgkqhkiG9w0BAQUFADBaMQswCQYDVQQGEwJDTjENMAsGA1UECgwEQkpDQTEdMBsGA1UECwwUUHVibGljIFRydXN0IFJvb3QgQ0ExHTAbBgNVBAMMFFB1YmxpYyBUcnVzdCBSb290IENBMB4XDTA1MDEwMTA4MDAwMFoXDTM0MTIzMTA4MDAwMFowWjELMAkGA1UEBhMCQ04xDTALBgNVBAoMBEJKQ0ExHTAbBgNVBAsMFFB1YmxpYyBUcnVzdCBSb290IENBMR0wGwYDVQQDDBRQdWJsaWMgVHJ1c3QgUm9vdCBDQTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAL3bgDwcHFmi+RkTW3WkLP2KNyOHg1cHUHGf4C1kkMXDkg6+j6HCgJyKj3tIC/veWWbMRn5plJS4wW54clcjoKlCl2QWC2Yali4DdrO6+OwzJnPCrwUFjEifYjKxcgayMOmIF/SDCLsYBzb+qUkYla8Y0PjHoeodKkwQXx7TYRwXyN5x9EQ36jDq2lXuH9ftQEZOIlcOHab44N+IEZHgx0yrGUAtoxIF7YhbmNK7rJcmEX6ywuKtiiNj3i0rivin1Ie4fV3bLkhv7UW8ZDyyfBKMpKYiCPLquKgBXrfUxw2/1nUYTWPE7LcQEUIflcv0kQuoyk0/4L8nS33sS1YMnw0CAwEAAaM9MDswDAYDVR0TBAUwAwEB/zAMBgNVHQ8EBQMDBwYAMB0GA1UdDgQWBBRgV2OcMBtwogEDmdLaNvRpCMA8pTANBgkqhkiG9w0BAQUFAAOCAQEAKn8Gl39djS3sq2LnuJVboBmQH+UT8cvQVUHuRmxd1Q3oPTW0aC98QL/OQgUymMhiUQH2fPOD09DfP3POyv9OhZC46nfEWfAf9B1LEH4EiYULhOGWFoQRrRlR6qie42Gx2emDQsRP9QHe3aLHHd8qvtEqFZqS4h0Je8pNpdhLhuY9lz1V3k+Eg8v7mNCPnFGZj69HaLm4qhmwU2QjVvtpMRDH7PjLPYgC5ibRo3Bke+WyZY07jwNiLS+B5dKHvnKRE7zFvPBeKSOa7rpEuUFlOq8vaYu95y0fiZnbjOpyluA8QXGJrfb4SLlw3UFK8QZ9yElA4LsITFQCgxwUI7nqyQ==");
+				//alert(ret);
+				ret = XTXAPP.SOF_ValidateCert(cert);
+				if (ret == 0) {
+					form1.sof_validatecert_cert_res.value = "验证证书成功";
+				} else {
+					form1.sof_validatecert_cert_res.value = "验证证书失败[" + ret + "]";
+				}
+			}
+		</script>
+		<tr class="alt">
+			<td>验证证书</td>
+			<td>
+				<table>
+					<tr> 
+						<td class="right"> 证书: </td>
+						<td class="left"> 
+							<textarea name="sof_validatecert_cert" cols="60" rows="10" ></textarea>
+						</td>
+					</tr>
+					<tr> 
+						<td colspan="2"><input type="button" value="点击测试" name="sof_validatecert_cert_btn" onclick="return sof_validatecert()"></td> 
+					<tr>
+				</table>
+			</td>
+			<td><input type="text" name="sof_validatecert_cert_res" size="60"></td>
+		</tr>
+
+		<script type="text/javascript">
+			//SOF登录
+			function sof_login()
+			{
+				var certid = form1.sof_login_certid.value;
+				var passwd = form1.sof_login_passwd.value;
+				
+				if (certid == "") {
+					alert("请输入CERTID");
+					form1.sof_login_certid.focus();
+					return;
+				}
+				if (passwd == "") {
+					alert("请输入用户口令");
+					form1.sof_login_passwd.focus();
+					return;
+				}
+				var ret = XTXAPP.SOF_Login(certid, passwd);
+				if (ret) {
+					form1.sof_login_res.value = "用户登录成功";	
+				} else {
+					form1.sof_login_res.value = "用户登录失败";	
+				}
+			}
+		</script>
+		<tr>
+			<td>SOF登录</td>
+			<td>
+				<table>
+					<tr> 
+						<td class="right"> CERTID: </td>
+						<td class="left"> 
+							<input type="text" name="sof_login_certid" size="40">
+							<input type="button" value="获取CERTID" name="get_keysn" onclick="return get_cert_id()">
+						</td>
+					</tr>
+					<tr> 
+						<td class="right"> 密码: </td>
+						<td class="left"> 
+							<input type="password"  name="sof_login_passwd" size="60" maxlength="60">
+						</td>
+					</tr>
+					<tr> 
+						<td colspan="2"><input type="button" value="点击测试" name="sof_login_btn" onclick="return sof_login()"></td> 
+					<tr>
+				</table>
+			</td>
+			<td><input type="text" name="sof_login_res" size="60"></td>
+		</tr>	
+		
+		
+		<script type="text/javascript">
+			//SOF登出
+			function sof_logout()
+			{
+				var certid = form1.sof_logout_certid.value;
+				
+				var ret = XTXAPP.SOF_Logout(certid);
+				if (ret) {
+					form1.sof_logout_res.value = "用户登出成功";	
+				} else {
+					form1.sof_logout_res.value = "用户登出失败";	
+				}
+			}
+		</script>
+		<tr>
+			<td>SOF登出</td>
+			<td>
+				<table>
+					<tr> 
+						<td class="right"> CERTID: </td>
+						<td class="left"> 
+							<input type="text" name="sof_logout_certid" size="40">
+							<input type="button" value="获取CERTID" name="get_keysn" onclick="return get_cert_id()">
+						</td>
+					</tr>
+					<tr> 
+						<td colspan="2"><input type="button" value="点击测试" name="sof_logout_btn" onclick="return sof_logout()"></td> 
+					<tr>
+				</table>
+			</td>
+			<td><input type="text" name="sof_logout_res" size="60"></td>
+		</tr>
+
+		<script type="text/javascript">
+			//获取密码重试次数
+			function sof_get_retrycount()
+			{
+				var certid = form1.sof_get_retrycount_certid.value;
+				
+				if (certid == "") {
+					alert("请输入CERTID");
+					form1.sof_get_retrycount_certid.focus();
+					return;
+				}
+
+				var ret = XTXAPP.SOF_GetPinRetryCount(certid);
+				form1.sof_get_retrycount_res.value = ret;	
+			}
+		</script>	
+		<tr class="alt">
+			<td>获取密码重试次数</td>
+			<td>
+				<table>
+					<tr> 
+						<td class="right"> CERTID: </td>
+						<td class="left"> 
+							<input type="text" name="sof_get_retrycount_certid" size="40">
+							<input type="button" value="获取CERTID" name="get_keysn" onclick="return get_cert_id()">
+						</td>
+					</tr>
+					<tr> 
+						<td colspan="2"><input type="button" value="点击测试" name="sof_get_retrycount_btn" onclick="return sof_get_retrycount()"></td> 
+					<tr>
+				</table>
+			</td>
+			<td><input type="text" name="sof_get_retrycount_res" size="60"></td>
+		</tr>
+		
+		<script type="text/javascript">
+			//修改用户口令
+			function sof_change_passwd()
+			{
+				var certid = form1.sof_change_passwd_certid.value;
+				var oldpin = form1.sof_change_passwd_oldPass.value;
+				var newpin1 = form1.sof_change_passwd_newPass1.value;
+				var newpin2 = form1.sof_change_passwd_newPass2.value;
+				
+				if (certid == "") {
+					alert("请输入CERTID");
+					form1.sof_change_passwd_certid.focus();
+					return;
+				}
+				if (oldpin == "") {
+					alert("请输入老密码");
+					form1.sof_change_passwd_oldPass.focus();
+					return;
+				}
+				if (newpin1 == "") {
+					alert("请输入新密码");
+					form1.sof_change_passwd_newPass1.focus();
+					return;
+				}
+				if (newpin2 == "") {
+					alert("请输入新密码");
+					form1.sof_change_passwd_newPass2.focus();
+					return;
+				}
+				if (newpin1 != newpin2) {
+					alert("两次输入的新密码不一致");
+					form1.sof_change_passwd_newPass1.focus();
+					return;
+				}
+
+				var ret = XTXAPP.SOF_ChangePassWd(certid, oldpin, newpin2);
+				if (ret) {
+					form1.sof_change_passwd_res.value = "修改证书密码成功";	
+				} else {
+					form1.sof_change_passwd_res.value = "修改证书密码失败";	
+				}
+			}
+		</script>
+		<tr>
+			<td>修改证书密码</td>
+			<td>
+				<table>
+					<tr> 
+						<td class="right"> CERTID: </td>
+						<td class="left"> 
+							<input type="text" name="sof_change_passwd_certid" size="40">
+							<input type="button" value="获取CERTID" name="get_keysn" onclick="return get_cert_id()">
+						</td>
+					</tr>
+					<tr> 
+						<td class="right"> 老密码: </td>
+						<td class="left"> 
+							<input type="password" name="sof_change_passwd_oldPass" size="60" maxlength="60">
+						</td>
+					</tr>
+					<tr> 
+						<td class="right"> 新密码: </td>
+						<td class="left"> 
+							<input type="password" name="sof_change_passwd_newPass1" size="60" maxlength="60">
+						</td>
+					</tr>
+					<tr> 
+						<td class="right"> 新密码确认: </td>
+						<td class="left"> 
+							<input type="password" name="sof_change_passwd_newPass2" size="60" maxlength="60">
+						</td>
+					</tr>
+					<tr> 
+						<td colspan="2"><input type="button" value="点击测试" name="sof_get_retrycount_btn" onclick="return sof_change_passwd()"></td> 
+					<tr>
+				</table>
+			</td>
+			<td><input type="text" name="sof_change_passwd_res" size="60"></td>
+		</tr>
+		
+		<script type="text/javascript">
+		//获取证书信息
+		function sof_get_certinfo()
+		{
+			var cert = form1.sof_get_certinfo_cert.value;
+			var infotype = form1.sof_get_certinfo_infotype.value;
+			
+			if (cert == "") {
+				alert("请输入证书");
+				form1.sof_get_certinfo_cert.focus();
+				return;
+			}
+			if (infotype == "") {
+				alert("请输入信息类型(1-20 33 34)");
+				form1.sof_get_certinfo_infotype.focus();
+				return;
+			}
+
+			var ret = XTXAPP.SOF_GetCertInfo(cert, infotype);
+			if (ret != "") {
+				form1.sof_get_certinfo_res.value = ret;
+			} else {
+				form1.sof_get_certinfo_res.value = "该项信息为空";
+			}
+		}
+		</script>	
+		<tr class="alt">
+			<td>获取证书信息</td>
+			<td>
+				<table>
+					<tr> 
+						<td class="right"> 证书: </td>
+						<td class="left"> 
+							<textarea name="sof_get_certinfo_cert" cols="60" rows="10" ></textarea>
+						</td>
+					</tr>
+					<tr> 
+						<td class="right"> 信息类型: </td>
+						<td class="left"> 
+							<input type="text" value="1" name="sof_get_certinfo_infotype" size="40">
+						</td>
+					</tr>
+					<tr> 
+						<td colspan="2"><input type="button" value="点击测试" name="sof_get_certinfo_btn" onclick="return sof_get_certinfo()"></td> 
+					<tr>
+				</table>
+			</td>
+			<td><input type="text" name="sof_get_certinfo_res" size="60"></td>
+		</tr>
+		
+		<script type="text/javascript">
+			//通过OID获取证书信息
+			function sof_get_certinfo_byoid()
+			{
+				var cert = form1.sof_get_certinfo_byoid_cert.value;
+				var oid = form1.sof_get_certinfo_byoid_cert_oid.value;
+				
+				if (cert == "") {
+					alert("请输入证书");
+					form1.sof_get_certinfo_byoid_cert.focus();
+					return;
+				}
+				if (oid == "") {
+					alert("请输入OID");
+					form1.sof_get_certinfo_byoid_cert_oid.focus();
+					return;
+				}
+
+				var ret = XTXAPP.SOF_GetCertInfoByOid(cert, oid);
+				if (ret != "") {
+					form1.sof_get_certinfo_byoid_res.value = ret;
+				} else {
+					form1.sof_get_certinfo_byoid_res.value = "该项信息为空";
+				}
+			}
+			
+			function get_cert_entity()
+			{
+				var cert = form1.sof_get_certinfo_byoid_cert.value;
+				
+				if (cert == "") {
+					alert("请输入证书");
+					form1.sof_get_certinfo_byoid_cert.focus();
+					return;
+				}
+
+				var ret = XTXAPP.SOF_GetCertEntity(cert);
+				if (ret != "") {
+					form1.sof_get_certinfo_byoid_res.value = ret;
+				} else {
+					form1.sof_get_certinfo_byoid_res.value = "获取证书唯一实体标识失败";
+				}
+			}
+		</script>	
+		<tr>
+			<td>通过OID获取证书信息</td>
+			<td>
+				<table>
+					<tr> 
+						<td class="right"> 证书: </td>
+						<td class="left"> 
+							<textarea name="sof_get_certinfo_byoid_cert" cols="60" rows="10" ></textarea>
+						</td>
+					</tr>
+					<tr> 
+						<td class="right"> OID: </td>
+						<td class="left"> 
+							<input type="text" value="2.16.840.1.113732.2" name="sof_get_certinfo_byoid_cert_oid" size="40">
+						</td>
+					</tr>
+					<tr> 
+						<td colspan="2"><input type="button" value="点击测试" name="sof_get_certinfo_byoid_cert_btn" onclick="return sof_get_certinfo_byoid()">
+						<input type="button" value="获取证书唯一实体标识" name="sof_get_certentity_btn" onclick="return get_cert_entity()"></td> 
+					<tr>
+				</table>
+			</td>
+			<td><input type="text" name="sof_get_certinfo_byoid_res" size="60"></td>
+		</tr>
+		
+		
+		<script type="text/javascript">
+			//数据签名验签测试
+			function sof_sign()
+			{
+				var certid = form1.sof_sign_verify_certid.value;
+				var plain = form1.sof_sign_verify_plain.value;
+				
+				if (certid == "") {
+					alert("请输入CERTID");
+					form1.sof_sign_verify_certid.focus();
+					return;
+				}
+				if (plain == "") {
+					alert("请输入要签名的数据");
+					form1.sof_sign_verify_plain.focus();
+					return;
+				}
+				//XTXAPP.SOF_SetSignMethod(0x00010001); /*rsa sm3*/
+				//var plain_data = "\x00\x01\x02\x03\x04\x05\x06\x07\x08\x09\x0A\x0B\x0C\x0D\x0E\x0F\x10\x11\x12\x13\x14\x15\x16\x17\x18\x19\x1A\x1B\x1C\x1D\x1E\x1F\x20\x21\x22\x23\x24\x25\x26\x27\x28\x29\x2A\x2B\x2C\x2D\x2E\x2F\x30\x31\x32\x33\x34\x35\x36\x37\x38\x39\x3A\x3B\x3C\x3D\x3E\x3F\x40\x41\x42\x43\x44\x45\x46\x47\x48\x49\x4A\x4B\x4C\x4D\x4E\x4F\x50\x51\x52\x53\x54\x55\x56\x57\x58\x59\x5A\x5B\x5C\x5D\x5E\x5F\x60\x61\x62\x63\x64\x65\x66\x67\x68\x69\x6A\x6B\x6C\x6D\x6E\x6F\x70\x71\x72\x73\x74\x75\x76\x77\x78\x79\x7A\x7B\x7C\x7D\x7E\x7F\x80\x81\x82\x83\x84\x85\x86\x87\x88\x89\x8A\x8B\x8C\x8D\x8E\x8F\x90\x91\x92\x93\x94\x95\x96\x97\x98\x99\x9A\x9B\x9C\x9D\x9E\x9F\xA0\xA1\xA2\xA3\xA4\xA5\xA6\xA7\xA8\xA9\xAA\xAB\xAC\xAD\xAE\xAF\xB0\xB1\xB2\xB3\xB4\xB5\xB6\xB7\xB8\xB9\xBA\xBB\xBC\xBD\xBE\xBF\xC0\xC1\xC2\xC3\xC4\xC5\xC6\xC7\xC8\xC9\xCA\xCB\xCC\xCD\xCE\xCF\xD0\xD1\xD2\xD3\xD4\xD5\xD6\xD7\xD8\xD9\xDA\xDB\xDC\xDD\xDE\xDF\xE0\xE1\xE2\xE3\xE4\xE5\xE6\xE7\xE8\xE9\xEA\xEB\xEC\xED\xEE\xEF\xF0\xF1\xF2\xF3\xF4\xF5\xF6\xF7\xF8\xF9\xFA\xFB\xFC\xFD\xFE\xFF";
+				//var plain_data = "赵永省";
+				//XTXAPP.SOF_SetSignMethod(0x10001);
+				var ret = XTXAPP.SOF_SignData(certid, plain);
+				form1.sof_sign_verify_sig.value = ret;	
+				if (ret == "") {
+					form1.sof_sign_verify_res.value = "数据签名失败";	
+				} else {
+					form1.sof_sign_verify_res.value = "数据签名成功";	
+				}
+				
+				var ret2 = XTXAPP.SOF_ExportUserCert(certid);
+				if (ret2 != "") {
+					form1.sof_sign_verify_cert.value = ret2;
+				} else {
+					form1.sof_sign_verify_cert.value = "证书为空";
+				}	
+			}
+			
+			function sof_verify()
+			{	
+				var plain = form1.sof_sign_verify_plain.value;
+				var sig = form1.sof_sign_verify_sig.value;
+				var cert = form1.sof_sign_verify_cert.value;
+				
+				if (plain == "") {
+					alert("请输入要验证的原文");
+					form1.sof_sign_verify_plain.focus();
+					return;
+				}
+				if (sig == "") {
+					alert("请输入要验证的签名值");
+					form1.sof_sign_verify_sig.focus();
+					return;
+				}
+				if (cert == "") {
+					alert("请输入要验证的证书");
+					form1.sof_sign_verify_cert.focus();
+					return;
+				}
+
+				var ret = XTXAPP.SOF_VerifySignedData(cert, plain, sig);
+				if (ret) {
+					form1.sof_sign_verify_res.value = "数据验签成功";	
+				} else {
+					form1.sof_sign_verify_res.value = "数据验签失败";	
+				}
+			}
+			function Bytedata(str){
+				var bytelen = 0;
+				return str.split('');
+			}
+			
+			function sof_sign_bin() {
+			
+				var certid = form1.sof_sign_verify_certid.value;
+				/*
+				var indata = new Array(261);
+				byte i;
+				for (i = 256; i > 0; i--) {
+					indata[256 - i] = i;
+				}*/
+				/* 赵永省 */
+				/*
+				indata[255] = 0xD5;
+				indata[256] = 0xD4;
+				indata[257] = 0xD3;
+				indata[258] = 0xC0;
+				indata[259] = 0xCA;
+				indata[260] = 0xA1;
+				*/
+				var indata = new Array("\x00\x01\x02\x03\x04\x05\x06\x07\x08\x09\x0A\x0B\x0C\x0D\x0E\x0F\x10\x11\x12\x13\x14\x15\x16\x17\x18\x19\x1A\x1B\x1C\x1D\x1E\x1F\x20\x21\x22\x23\x24\x25\x26\x27\x28\x29\x2A\x2B\x2C\x2D\x2E\x2F\x30\x31\x32\x33\x34\x35\x36\x37\x38\x39\x3A\x3B\x3C\x3D\x3E\x3F\x40\x41\x42\x43\x44\x45\x46\x47\x48\x49\x4A\x4B\x4C\x4D\x4E\x4F\x50\x51\x52\x53\x54\x55\x56\x57\x58\x59\x5A\x5B\x5C\x5D\x5E\x5F\x60\x61\x62\x63\x64\x65\x66\x67\x68\x69\x6A\x6B\x6C\x6D\x6E\x6F\x70\x71\x72\x73\x74\x75\x76\x77\x78\x79\x7A\x7B\x7C\x7D\x7E\x7F\x80\x81\x82\x83\x84\x85\x86\x87\x88\x89\x8A\x8B\x8C\x8D\x8E\x8F\x90\x91\x92\x93\x94\x95\x96\x97\x98\x99\x9A\x9B\x9C\x9D\x9E\x9F\xA0\xA1\xA2\xA3\xA4\xA5\xA6\xA7\xA8\xA9\xAA\xAB\xAC\xAD\xAE\xAF\xB0\xB1\xB2\xB3\xB4\xB5\xB6\xB7\xB8\xB9\xBA\xBB\xBC\xBD\xBE\xBF\xC0\xC1\xC2\xC3\xC4\xC5\xC6\xC7\xC8\xC9\xCA\xCB\xCC\xCD\xCE\xCF\xD0\xD1\xD2\xD3\xD4\xD5\xD6\xD7\xD8\xD9\xDA\xDB\xDC\xDD\xDE\xDF\xE0\xE1\xE2\xE3\xE4\xE5\xE6\xE7\xE8\xE9\xEA\xEB\xEC\xED\xEE\xEF\xF0\xF1\xF2\xF3\xF4\xF5\xF6\xF7\xF8\xF9\xFA\xFB\xFC\xFD\xFE\xFF");
+				var sign = XTXAPP.SOF_SignBinaryData(certid, indata);
+				if (sign == "") {
+					form1.sof_sign_verify_res.value = "二进制数据签名失败";	
+					return;
+				}
+				var userCert = XTXAPP.SOF_ExportUserCert(certid);
+				ret = XTXAPP.SOF_VerifySignedBinaryData(userCert, indata, sign);
+				if (!ret) {
+					form1.sof_sign_verify_res.value = "二进制数据签名成功，验签失败";	
+				} else {
+					form1.sof_sign_verify_res.value = "二进制数据签名验签成功";
+				}
+			
+			}
+			
+			function sof_sign_by_prikey() {
+				var prikey = form1.sof_sign_verify_prikey.value;
+				var cert = form1.sof_sign_verify_cert.value;
+				var plain = form1.sof_sign_verify_plain.value;
+				var ret = XTXAPP.SOF_SignDataByPriKey(prikey, cert, plain);
+				form1.sof_sign_verify_sig.value = ret;	
+				if (ret) {
+					form1.sof_sign_verify_res.value = "私钥签名成功";	
+				} else {
+					form1.sof_sign_verify_res.value = "私钥签名失败";	
+				}
+			}
+			
+			function sof_sign_hash() {
+				var certid = form1.sof_sign_verify_certid.value;
+				var plain = form1.sof_sign_verify_plain.value;				
+				var dev_type = XTXAPP.GetDeviceInfo(certid, 4);
+				var hash_alg;
+				if (dev_type == "SM2") {
+					hash_alg = 1;
+				} else {
+					hash_alg = 2;
+				}
+				alert(certid + "\n" + plain);
+				ret = XTXAPP.SOF_SignHashData(certid, plain, 1);
+				form1.sof_sign_verify_sig.value = ret;	
+				if (ret) {
+					form1.sof_sign_verify_res.value = "对Hash数据签名成功";	
+				} else {
+					form1.sof_sign_verify_res.value = "对Hash数据签名失败";	
+				}
+				var ret2 = XTXAPP.SOF_ExportUserCert(certid);
+				if (ret2 != "") {
+					form1.sof_sign_verify_cert.value = ret2;
+				} else {
+					form1.sof_sign_verify_cert.value = "证书为空";
+				}	
+			}
+			
+			function sof_verify_hash()
+			{	
+				var plain = form1.sof_sign_verify_plain.value;
+				var sig = form1.sof_sign_verify_sig.value;
+				var cert = form1.sof_sign_verify_cert.value;
+				
+				if (plain == "") {
+					alert("请输入要验证的摘要原文");
+					form1.sof_sign_verify_plain.focus();
+					return;
+				}
+				if (sig == "") {
+					alert("请输入要验证的签名值");
+					form1.sof_sign_verify_sig.focus();
+					return;
+				}
+				if (cert == "") {
+					alert("请输入要验证的证书");
+					form1.sof_sign_verify_cert.focus();
+					return;
+				}
+
+				var ret = XTXAPP.SOF_VerifySignedHashData(cert, plain, sig, 1);
+				if (ret) {
+					form1.sof_sign_verify_res.value = "Hash数据验签成功";	
+				} else {
+					form1.sof_sign_verify_res.value = "Hash数据验签失败";	
+				}
+			}
+		</script>	
+		<tr class="alt">
+			<td>数据签名验签测试</td>
+			<td>
+				<table>
+					<tr> 
+						<td class="right"> CERTID: </td>
+						<td class="left"> 
+							<input type="text" name="sof_sign_verify_certid" size="40">
+							<input type="button" value="获取CERTID" name="get_keysn" onclick="return get_cert_id()">
+						</td>
+					</tr>
+					<tr> 
+						<td class="right"> 私钥(Base64编码): </td>
+						<td class="left"> 
+							<textarea name="sof_sign_verify_prikey" cols="60" rows="10" ></textarea>
+						</td>
+					</tr>
+					<tr> 
+						<td class="right"> 数据原文: </td>
+						<td class="left"> 
+							<textarea name="sof_sign_verify_plain" cols="60" rows="10" ></textarea>
+						</td>
+					</tr>
+					<tr> 
+						<td class="right"> 签名值: </td>
+						<td class="left"> 
+							<textarea name="sof_sign_verify_sig" cols="60" rows="5" ></textarea>
+						</td>
+					</tr>
+					<tr> 
+						<td class="right"> 证书: </td>
+						<td class="left"> 
+							<textarea name="sof_sign_verify_cert" cols="60" rows="10"></textarea>
+						</td>
+					</tr>
+					<tr> 
+						<td colspan="2">
+							<input type="button" value="签名" name="sof_sign_verify_sign_btn" onclick="return sof_sign()">
+							<input type="button" value="验签" name="sof_sign_verify_verify_btn" onclick="return sof_verify()">
+							<input type="button" value="二进制签名验签" name="sof_sign_verify_sign_bin_btn" onclick="return sof_sign_bin()">
+							<input type="button" value="私钥签名" name="sof_sign_verify_sign_bin_btn" onclick="return sof_sign_by_prikey()">
+							<input type="button" value="对Hash签名" name="sof_sign_verify_sign_hash_btn" onclick="return sof_sign_hash()">
+							<input type="button" value="对Hash验签" name="sof_sign_verify_verify_hash_btn" onclick="return sof_verify_hash()">
+						</td> 
+					<tr>
+				</table>
+			</td>
+			<td><input type="text" name="sof_sign_verify_res" size="60"></td>
+		</tr>
+		
+		<script type="text/javascript">
+			//文件签名验签测试
+			function sof_file_sign()
+			{
+				var certid = form1.sof_sign_verify_file_certid.value;
+				var file = form1.sof_sign_verify_filename.value;
+				
+				if (certid == "") {
+					alert("请输入CERTID");
+					form1.sof_sign_verify_file_certid.focus();
+					return;
+				}
+				if (file == "") {
+					alert("请输入文件名");
+					form1.sof_sign_verify_filename.focus();
+					return;
+				}
+				//XTXAPP.SOF_SetSignMethod(0x10001);
+				var ret = XTXAPP.SOF_SignFile(certid, file);
+				form1.sof_sign_verify_file_sig.value = ret;	
+				if (ret == "") {
+					form1.sof_sign_verify_file_res.value = "文件签名失败";	
+				} else {
+					form1.sof_sign_verify_file_res.value = "文件签名成功";	
+				}
+				
+				var ret2 = XTXAPP.SOF_ExportUserCert(certid);
+				if (ret2 != "") {
+					form1.sof_sign_verify_file_cert.value = ret2;
+				} else {
+					form1.sof_sign_verify_file_cert.value = "证书为空";
+				}		
+			}
+			
+			function sof_file_verify()
+			{	
+				var file = form1.sof_sign_verify_filename.value;
+				var sig = form1.sof_sign_verify_file_sig.value;
+				var cert = form1.sof_sign_verify_file_cert.value;
+				
+				if (file == "") {
+					alert("请输入文件名");
+					form1.sof_sign_verify_filename.focus();
+					return;
+				}
+				if (sig == "") {
+					alert("请输入要验证的签名值");
+					form1.sof_sign_verify_file_sig.focus();
+					return;
+				}
+				if (cert == "") {
+					alert("请输入要验证的证书");
+					form1.sof_sign_verify_file_cert.focus();
+					return;
+				}
+				
+				//XTXAPP.SOF_SetSignMethod(0x10001);
+
+				var ret = XTXAPP.SOF_VerifySignedFile(cert, file, sig);
+				if (ret) {
+					form1.sof_sign_verify_file_res.value = "文件验签成功";	
+				} else {
+					form1.sof_sign_verify_file_res.value = "文件验签失败";	
+				}
+			}
+		</script>	
+		<tr>
+			<td>文件签名验签测试</td>
+			<td>
+				<table>
+					<tr> 
+						<td class="right"> CERTID: </td>
+						<td class="left"> 
+							<input type="text" name="sof_sign_verify_file_certid" size="40">
+							<input type="button" value="获取CERTID" name="get_keysn" onclick="return get_cert_id()">
+						</td>
+					</tr>
+					<tr> 
+						<td class="right"> 文件: </td>
+						<td class="left"> 
+							<input type=file id=oFile style="display:none" onchange="sof_sign_verify_filename.value=this.value">
+							<input type=text name="sof_sign_verify_filename" size="60">
+							<input type=button value="选择文件" onclick="oFile.click()">
+						</td>
+					</tr>
+					<tr> 
+						<td class="right"> 签名值: </td>
+						<td class="left"> 
+							<textarea name="sof_sign_verify_file_sig" cols="60" rows="5" ></textarea>
+						</td>
+					</tr>
+					<tr> 
+						<td class="right"> 证书: </td>
+						<td class="left"> 
+							<textarea name="sof_sign_verify_file_cert" cols="60" rows="10"></textarea>
+						</td>
+					</tr>
+					<tr> 
+						<td colspan="2">
+							<input type="button" value="签名" name="sof_sign_verify_sign_file_btn" onclick="return sof_file_sign()">
+							<input type="button" value="验签" name="sof_sign_verify_sign_file_btn" onclick="return sof_file_verify()">
+						</td> 
+					<tr>
+				</table>
+			</td>
+			<td><input type="text" name="sof_sign_verify_file_res" size="60"></td>
+		</tr>
+		
+		<script type="text/javascript">
+			//数据对称加解密
+			function symEncrypt()
+			{
+				var key = form1.sym_enc_dec_key.value;
+				var plain = form1.sym_enc_dec_plain.value;
+				
+				/*
+				if (key == "" || key.length != 16) {
+					alert("请输入对称密钥 必须是16字节");
+					form1.sym_enc_dec_key.focus();
+					return;
+				}
+				*/
+				if (plain == "") {
+					alert("请输入原始数据");
+					form1.sym_enc_dec_plain.focus();
+					return;
+				}
+				XTXAPP.SOF_SetEncryptMethod(0x401);
+				var ret = XTXAPP.SOF_SymEncryptData(key, plain);
+				form1.sym_enc_dec_cipher.value = ret;	
+				if (ret) {
+					form1.sym_enc_dec_res.value = "对称加密数据成功";	
+				} else {
+					form1.sym_enc_dec_res.value = "对称加密数据失败";	
+				}
+			}
+			
+			function symDecrypt()
+			{	
+				var key = form1.sym_enc_dec_key.value;
+				var cipher = form1.sym_enc_dec_cipher.value;
+				
+				/*
+				if (key == "" || key.length != 16) {
+					alert("请输入对称密钥 必须是16字节");
+					form1.sym_enc_dec_key.focus();
+					return;
+				}
+				*/
+				if (cipher == "") {
+					alert("请输入密文数据");
+					form1.sym_enc_dec_cipher.focus();
+					return;
+				}
+				XTXAPP.SOF_SetEncryptMethod(0x404);
+				XTXAPP.SOF_SetEncryptMethod(0x401);
+				var ret = XTXAPP.SOF_SymDecryptData(key, cipher);
+				form1.sym_enc_dec_tmp.value = ret;	
+				if (ret) {
+					form1.sym_enc_dec_res.value = "对称解密数据成功";	
+				} else {
+					form1.sym_enc_dec_res.value = "对称解密数据失败";	
+				}
+			}
+			
+			function verifydata()
+			{
+				var plain = form1.sym_enc_dec_plain.value;
+				var tmp = form1.sym_enc_dec_tmp.value;
+				
+				if (plain == "") {
+					alert("原始数据为空!");
+					form1.sym_enc_dec_key.focus();
+					return;
+				}
+				if (tmp == "") {
+					alert("解密后的数据为空");
+					form1.sym_enc_dec_tmp.focus();
+					return;
+				}
+				if (tmp == plain) {
+					form1.sym_enc_dec_res.value = "解密后的数据和原始数据一致";	
+				} else {
+					form1.sym_enc_dec_res.value = "解密后的数据和原始数据不一致";	
+				}
+			}
+		</script>	
+		<tr class="alt">
+			<td>数据对称加解密</td>
+			<td>
+				<table>
+					<tr> 
+						<td class="right"> 对称密钥: </td>
+						<td class="left"> 
+							<input type="text" name="sym_enc_dec_key" size="40">
+						</td>
+					</tr>
+					<tr> 
+						<td class="right"> 原始数据: </td>
+						<td class="left"> 
+							<textarea name="sym_enc_dec_plain" cols="60" rows="5"></textarea>
+						</td>
+					</tr>
+					<tr> 
+						<td class="right"> 密文数据: </td>
+						<td class="left"> 
+							<textarea name="sym_enc_dec_cipher" cols="60" rows="5" ></textarea>
+						</td>
+					</tr>
+					<tr> 
+						<td class="right"> 解密后的数据: </td>
+						<td class="left"> 
+							<textarea name="sym_enc_dec_tmp" cols="60" rows="5" ></textarea>
+						</td>
+					</tr>
+					<tr> 
+						<td colspan="2">
+							<input type="button" value="加密" name="sym_enc_dec_enc_btn" onclick="return symEncrypt()">
+							<input type="button" value="解密" name="sym_enc_dec_dec_btn" onclick="return symDecrypt()">
+							<input type="button" value="比较" name="sym_enc_dec_verify_btn" onclick="return verifydata()">
+						</td> 
+					<tr>
+				</table>
+			</td>
+			<td><input type="text" name="sym_enc_dec_res" size="60"></td>
+		</tr>
+		
+		<script type="text/javascript">
+			//文件对称加解密测试
+			function file_sym_enc()
+			{
+				var key = form1.sym_enc_dec_file_key.value;
+				var ori_file = form1.sym_enc_dec_file_ori_file.value;
+				var cipher_file = form1.sym_enc_dec_file_cipher_file.value;
+				
+				/*if (key == "" || key.length != 16) {
+					alert("请输入对称密钥 必须是16字节");
+					form1.sym_enc_dec_file_key.focus();
+					return;
+				}*/
+				if (ori_file == "") {
+					alert("请指定要加密的原始文件");
+					form1.sym_enc_dec_file_ori_file.focus();
+					return;
+				}
+				if (cipher_file == "") {
+					alert("请指定要密文文件路径");
+					form1.sym_enc_dec_file_cipher_file.focus();
+					return;
+				}
+				//XTXAPP.SOF_SetEncryptMethod(257);//sm1_ecb
+				var ret = XTXAPP.SOF_SymEncryptFile(key, ori_file, cipher_file);
+				if (ret) {
+					form1.sym_enc_dec_file_res.value = "对称加密文件成功";	
+				} else {
+					form1.sym_enc_dec_file_res.value = "对称加密文件失败";	
+				}		
+			}
+			
+			function file_sym_dec()
+			{	
+				var key = form1.sym_enc_dec_file_key.value;
+				var cipher_file = form1.sym_enc_dec_file_cipher_file.value;
+				var tmp_file = form1.sym_enc_dec_file_tmp_file.value;
+				
+				/*if (key == "" || key.length != 16) {
+					alert("请输入对称密钥 必须是16字节");
+					form1.sym_enc_dec_file_key.focus();
+					return;
+				}*/
+				
+				if (cipher_file == "") {
+					alert("请指定要密文文件路径");
+					form1.sym_enc_dec_file_cipher_file.focus();
+					return;
+				}
+				if (tmp_file == "") {
+					alert("请指定解密后的文件路径");
+					form1.sym_enc_dec_file_tmp_file.focus();
+					return;
+				}
+				//XTXAPP.SOF_SetEncryptMethod(257);//sm1_ecb
+				var ret = XTXAPP.SOF_SymDecryptFile(key, cipher_file, tmp_file);
+				if (ret) {
+					form1.sym_enc_dec_file_res.value = "对称解密文件成功";	
+				} else {
+					form1.sym_enc_dec_file_res.value = "对称解密文件失败";	
+				}		
+			}
+		</script>	
+		<tr>
+			<td>文件对称加解密测试</td>
+			<td>
+				<table>
+					<tr> 
+						<td class="right"> 对称密钥: </td>
+						<td class="left"> 
+							<input type="text" name="sym_enc_dec_file_key" size="40">
+						</td>
+					</tr>
+					<tr> 
+						<td class="right"> 原文件: </td>
+						<td class="left"> 
+							<input type=file id=oFile2 style="display:none" onchange="sym_enc_dec_file_ori_file.value=this.value">
+							<input type=text name="sym_enc_dec_file_ori_file" size="60">
+							<input type=button value="选择文件" onclick="oFile2.click()">
+						</td>
+					</tr>
+					<tr> 
+						<td class="right"> 加密后的文件: </td>
+						<td class="left"> 
+							<input type=text name="sym_enc_dec_file_cipher_file" size="60">
+						</td>
+					</tr>
+					<tr> 
+						<td class="right"> 加密后的文件: </td>
+						<td class="left"> 
+							<input type=text name="sym_enc_dec_file_tmp_file" size="60">
+						</td>
+					</tr>
+					<tr> 
+						<td colspan="2">
+							<input type="button" value="加密" name="sym_enc_dec_file_enc_btn" onclick="return file_sym_enc()">
+							<input type="button" value="解密" name="sym_enc_dec_file_dec_btn" onclick="return file_sym_dec()">
+						</td> 
+					<tr>
+				</table>
+			</td>
+			<td><input type="text" name="sym_enc_dec_file_res" size="60"></td>
+		</tr>
+		
+		<script type="text/javascript">
+			//产生随机数
+			function sof_genrandom()
+			{
+				//var certid = form1.sof_genrandom_certid.value;
+				var randomlen = form1.sof_genrandom_randomlen.value;
+				
+				//if (certid == "") {
+				//	alert("请输入CERTID");
+				//	form1.sof_genrandom_certid.focus();
+				//	return;
+				//}
+				if (randomlen == "") {
+					alert("请输入随机数长度");
+					form1.sof_genrandom_randomlen.focus();
+					return;
+				}
+				var ret = XTXAPP.SOF_GenRandom(/*certid, */randomlen);
+				if (ret != "") {
+					form1.sof_genrandom_res.value = ret;	
+				} else {
+					form1.sof_genrandom_res.value = "产生随机数失败";	
+				}
+			}
+		</script>	
+		<tr class="alt">
+			<td>产生随机数</td>
+			<td>
+				<table>
+					<!--<tr> 
+						<td class="right"> CERTID: </td>
+						<td class="left"> 
+							<input type="text" name="sof_genrandom_certid" size="40">
+							<input type="button" value="获取CERTID" name="get_keysn" onclick="return get_cert_id()">
+						</td>
+					</tr>
+					-->
+					<tr> 
+						<td class="right"> 随机数长度: </td>
+						<td class="left"> 
+							<input type="text" value = "1024" name="sof_genrandom_randomlen" size="60">
+						</td>
+					</tr>
+					<tr> 
+						<td colspan="2">
+							<input type="button" value="点击测试" name="sof_genrandom_btn" onclick="return sof_genrandom()">
+						</td> 
+					<tr>
+				</table>
+			</td>
+			<td><textarea name="sof_genrandom_res" cols="60" rows="10" > </textarea></td>
+		</tr>
+		
+		<script type="text/javascript">
+			//Base64编解码
+			function base64_encode()
+			{
+				var plain = form1.base64_plain.value;
+			
+				if (plain == "") {
+					alert("请输入原始数据");
+					form1.base64_plain.focus();
+					return;
+				}
+				
+				var ret = XTXAPP.SOF_Base64Encode(plain);
+				form1.base64_cipher.value = ret;
+				if (ret != "") {
+					form1.base64_res.value = "Base64编码成功";	
+				} else {
+					form1.base64_res.value = "Base64编码失败";	
+				}		
+			}
+			
+			function base64_decode()
+			{	
+				var cipher = form1.base64_cipher.value;
+			
+				if (cipher == "") {
+					alert("请待解码的数据");
+					form1.base64_cipher.focus();
+					return;
+				}
+				
+				var ret = XTXAPP.SOF_Base64Decode(cipher);
+				form1.base64_tmp.value = ret;
+				if (ret != "") {
+					form1.base64_res.value = "Base64解码成功";	
+				} else {
+					form1.base64_res.value = "Base64解码失败";	
+				}		
+			}
+			
+			function base64_encode_file()
+			{	
+				var file = form1.file_base64_plain.value;
+			
+				if (file == "") {
+					alert("请选择文件");
+					form1.file_base64_plain.focus();
+					return;
+				}
+				
+				var ret = XTXAPP.Base64EncodeFile(file);
+				form1.base64_tmp.value = ret;
+				if (ret != "") {
+					form1.base64_res.value = "Base64编码文件成功";	
+				} else {
+					form1.base64_res.value = "Base64编码文件失败";	
+				}		
+			}
+			
+			function base64_verifydata()
+			{
+				var plain = form1.base64_plain.value;
+				var tmp = form1.base64_tmp.value;
+				
+				if (plain == "") {
+					alert("原始数据为空!");
+					form1.base64_plain.focus();
+					return;
+				}
+				if (tmp == "") {
+					alert("解码后的数据为空");
+					form1.base64_tmp.focus();
+					return;
+				}
+				if (tmp == plain) {
+					form1.base64_res.value = "解码后的数据和原始数据一致";	
+				} else {
+					form1.base64_res.value = "解码后的数据和原始数据不一致";	
+				}
+			}
+		</script>	
+		<tr>
+			<td>Base64编解码测试</td>
+			<td>
+				<table>
+					<tr> 
+						<td class="right"> 原始数据: </td>
+						<td class="left"> 
+							<textarea name="base64_plain" cols="60" rows="5"></textarea>
+						</td>
+					</tr>
+					<tr> 
+						<td class="right"> 编码后数据: </td>
+						<td class="left"> 
+							<textarea name="base64_cipher" cols="60" rows="5" ></textarea>
+						</td>
+					</tr>
+					<tr> 
+						<td class="right"> 解码后数据: </td>
+						<td class="left"> 
+							<textarea name="base64_tmp" cols="60" rows="5" ></textarea>
+						</td>
+					</tr>
+					
+					<tr> 
+						<td class="right"> 原始文件: </td>
+						<td class="left"> 
+							<input type=file id=oFile232 style="display:none" onchange="file_base64_plain.value=this.value">
+							<input type=text name="file_base64_plain" size="60">
+							<input type=button value="选择文件" onclick="oFile232.click()">
+						</td>
+					</tr>
+					
+					<tr> 
+						<td colspan="2">
+							<input type="button" value="编码" name="base64_encode_btn" onclick="return base64_encode()">
+							<input type="button" value="解码" name="base64_decode_btn" onclick="return base64_decode()">
+							<input type="button" value="比较" name="base64_verify_btn" onclick="return base64_verifydata()">
+							<input type="button" value="文件编码" name="base64_encode_file_btn" onclick="return base64_encode_file()">
+						</td> 
+					<tr>
+				</table>
+			</td>
+			<td><input type="text" name="base64_res" size="60"></td>
+		</tr>
+		<script type="text/javascript">
+			//数据做Hash
+			function data_digest()
+			{
+				var plain = form1.data_digest_plain.value;
+			/*
+				if (plain == "") {
+					alert("请输入原始数据");
+					form1.data_digest_plain.focus();
+					return;
+				}
+			*/
+				var hashalg = form1.data_digest_hashalg.value;
+				
+				alert(plain + "\n" +plain.length);
+				var abc = plain.replace(new RegExp("\r\n","gm"),"\n");
+				alert(abc + "\n" +abc.length);
+				
+				var ret = XTXAPP.SOF_HashData(hashalg, plain);
+				form1.data_digest_cipher.value = ret;
+				if (ret != "") {
+					form1.data_digest_res.value = "数据摘要成功";	
+				} else {
+					form1.data_digest_res.value = "数据摘要失败";	
+				}		
+			}
+		</script>	
+		<tr class="alt">
+			<td>数据Hash测试</td>
+			<td>
+				<table>
+					<tr> 
+						<td class="right"> 原始数据: </td>
+						<td class="left"> 
+							<textarea name="data_digest_plain" cols="60" rows="5"></textarea>
+						</td>
+					</tr>
+					<tr>
+						<td class="right"> 密钥类型: </td>
+						<td class="left"> 
+							<select name="data_digest_hashalg">
+								<option value=2>SHA1</option>
+								<option value=1>SM3</option>
+								<option value=4>SHA256</option>
+								<option value=8>MD5</option>
+							</select>
+						</td>
+					</tr>
+					<tr> 
+						<td class="right"> Hash值: </td>
+						<td class="left"> 
+							<input type="text" name="data_digest_cipher" size="60">
+						</td>
+					</tr>
+					<tr> 
+						<td colspan="2">
+							<input type="button" value="点击测试" name="data_digest_btn" onclick="return data_digest()">
+						</td> 
+					<tr>
+				</table>
+			</td>
+			<td><input type="text" name="data_digest_res" size="60"></td>
+		</tr>
+		
+		<script type="text/javascript">
+			//文件做Hash
+			function file_digest()
+			{
+				var plain = form1.file_digest_plain.value;
+			
+				if (plain == "") {
+					alert("请输入原始文件");
+					form1.file_digest_plain.focus();
+					return;
+				}
+				var hashalg = form1.file_digest_hashalg.value;
+				
+				var ret = XTXAPP.SOF_HashFile(hashalg, plain);
+				form1.file_digest_cipher.value = ret;
+				if (ret != "") {
+					form1.file_digest_res.value = "数据摘要成功";	
+				} else {
+					form1.file_digest_res.value = "数据摘要失败";	
+				}		
+			}
+		</script>	
+		<tr>
+			<td>文件Hash测试</td>
+			<td>
+				<table>
+					<tr> 
+						<td class="right"> 原始文件: </td>
+						<td class="left"> 
+							<input type=file id=oFile3 style="display:none" onchange="file_digest_plain.value=this.value">
+							<input type=text name="file_digest_plain" size="60">
+							<input type=button value="选择文件" onclick="oFile3.click()">
+						</td>
+					</tr>
+					<tr>
+						<td class="right"> 密钥类型: </td>
+						<td class="left"> 
+							<select name="file_digest_hashalg">
+								<option value=2>SHA1</option>
+								<option value=1>SM3</option>
+							</select>
+						</td>
+					</tr>
+					<tr> 
+						<td class="right"> Hash值: </td>
+						<td class="left"> 
+							<input type="text" name="file_digest_cipher" size="60">
+						</td>
+					</tr>
+					<tr> 
+						<td colspan="2">
+							<input type="button" value="点击测试" name="file_digest_btn" onclick="return file_digest()">
+						</td> 
+					<tr>
+				</table>
+			</td>
+			<td><input type="text" name="file_digest_res" size="60"></td>
+		</tr>
+		
+		<script type="text/javascript">
+			//pkcs7 签名验签
+			function pkcs7_sign()
+			{
+				var certid = form1.pkcs7_sign_verify_certid.value;
+				var plain = form1.pkcs7_sign_verify_plain.value;
+				
+				if (certid == "") {
+					alert("请输入CERTID");
+					form1.pkcs7_sign_verify_certid.focus();
+					return;
+				}
+				if (plain == "") {
+					alert("请输入要签名的数据");
+					form1.pkcs7_sign_verify_plain.focus();
+					return;
+				}
+				//XTXAPP.SOF_SetSignMethod(0x10004);
+				var ret = XTXAPP.SOF_SignMessage(1, certid, plain); //0表示Attached(带原文)，1表示Detached(不带原文)
+				form1.pkcs7_sign_verify_sig.value = ret;	
+				if (ret == "") {
+					form1.pkcs7_sign_verify_res.value = "数据签名失败";	
+				} else {
+					form1.pkcs7_sign_verify_res.value = "数据签名成功";	
+				}	
+			}
+			function readFile(filename)
+			{   
+				var fso = new ActiveXObject("Scripting.FileSystemObject");  			
+				//var f = fso.OpenTextFile(filename,1, false, false);  
+				var file = fso.GetFile(filename);
+				var ts = file.OpenAsTextStream(1,false);
+				var s = "";   
+				//while (!f.AtEndOfStream)   
+					//s += f.ReadLine()+"/n";   
+				s = ts.ReadAll();
+				ts.Close();  
+				return s;   
+			}   
+			function pkcs7_verify()
+			{
+				//var plain = readFile("E:\\PDFIUM\\simple1.pdf");
+				//alert(plain);
+				var plain = form1.pkcs7_sign_verify_plain.value;
+				var sig = form1.pkcs7_sign_verify_sig.value;
+				if (sig == "") {
+					alert("请输入签名值");
+					form1.pkcs7_sign_verify_sig.focus();
+					return;
+				}
+
+				var ret = XTXAPP.SOF_VerifySignedMessage(sig, plain);
+				if (!ret) {
+					form1.pkcs7_sign_verify_res.value = "数据验签失败";	
+				} else {
+					form1.pkcs7_sign_verify_res.value = "数据验签成功";	
+				}	
+			}
+			
+			function pkcs7_get_signer_info()
+			{
+				var sig = form1.pkcs7_sign_verify_sig.value;
+				if (sig == "") {
+					alert("请输入签名值");
+					form1.pkcs7_sign_verify_sig.focus();
+					return;
+				}
+				var type = form1.pkcs7_sign_verify_type.value;
+
+				var ret = XTXAPP.SOF_GetInfoFromSignedMessage(sig, type);
+				if (ret == "") {
+					form1.pkcs7_sign_verify_res.value = "获取P7签名信息失败";	
+				} else {
+					form1.pkcs7_sign_verify_res.value = ret;	
+				}		
+			}
+		</script>	
+		<tr class="alt">
+			<td>PKCS7签名验签</td>
+			<td>
+				<table>
+					<tr> 
+						<td class="right"> CERTID: </td>
+						<td class="left"> 
+							<input type="text" name="pkcs7_sign_verify_certid" size="40">
+							<input type="button" value="获取CERTID" name="get_keysn" onclick="return get_cert_id()">
+						</td>
+					</tr>
+					<tr> 
+						<td class="right"> 数据原文: </td>
+						<td class="left"> 
+							<textarea name="pkcs7_sign_verify_plain" cols="60" rows="10" ></textarea>
+						</td>
+					</tr>
+					<tr> 
+						<td class="right"> 签名值: </td>
+						<td class="left"> 
+							<textarea name="pkcs7_sign_verify_sig" cols="60" rows="5" ></textarea>
+						</td>
+					</tr>
+					</tr>
+						<td class="right"> 通过签名值获取信息: </td>
+						<td class="left"> 
+							<select name="pkcs7_sign_verify_type">
+								<option value="1">原文</option>
+								<option value="2">证书</option>
+								<option value="3">签名</option>
+							</select>
+							<input type="button" value="点击测试" name="pkcs7_get_signer_info_btn" onclick="return pkcs7_get_signer_info()">
+						</td>
+					</tr>	
+					<tr> 
+						<td colspan="2">
+							<input type="button" value="签名" name="pkcs7_sign_verify_btn" onclick="return pkcs7_sign()">
+							<input type="button" value="验签" name="pkcs7_sign_verify_btn" onclick="return pkcs7_verify()">
+						</td> 
+					<tr>
+				</table>
+			</td>
+			<td><input type="text" name="pkcs7_sign_verify_res" size="60"></td>
+		</tr>
+		
+		
+		<script type="text/javascript">
+			//pkcs7 数字信封加密解密
+			function pkcs7_encrypt()
+			{
+				var plain = form1.pkcs7_enc_dec_plain.value;
+				var cert = form1.pkcs7_enc_dec_cert.value;
+				
+				if (plain == "") {
+					alert("请输入数据原文");
+					form1.pkcs7_enc_dec_plain.focus();
+					return;
+				}
+				if (cert == "") {
+					alert("请输入证书");
+					form1.pkcs7_enc_dec_cert.focus();
+					return;
+				}
+				//XTXAPP.SOF_SetEncryptMethod(0x201);//SM1_ECB
+				XTXAPP.SOF_SetEncryptMethod(0x401); //SM4_ECB
+				//XTXAPP.SOF_SetEncryptMethod(0x4001); //AES_128
+				var ret = XTXAPP.SOF_EncryptDataEx(cert, plain);
+				form1.pkcs7_enc_dec_cipher.value = ret;	
+				if (ret == "") {
+					form1.pkcs7_enc_dec_res.value = "数据加密失败";	
+				} else {
+					form1.pkcs7_enc_dec_res.value = "数据加密成功";	
+				}	
+			}
+			
+			function pkcs7_decrypt()
+			{
+				var certid = form1.pkcs7_enc_dec_certid.value;
+				if (certid == "") {
+					alert("请输入CERTID");
+					form1.pkcs7_sign_verify_certid.focus();
+					return;
+				}
+				
+				var cipher = form1.pkcs7_enc_dec_cipher.value;
+				if (cipher == "") {
+					alert("请输入密文数据");
+					form1.pkcs7_enc_dec_cipher.focus();
+					return;
+				}
+
+				var ret = XTXAPP.SOF_DecryptData(certid, cipher);
+				form1.pkcs7_enc_dec_tmp.value = ret;
+				if (ret == "") {
+					form1.pkcs7_enc_dec_res.value = "数据解密失败";	
+				} else {
+					form1.pkcs7_enc_dec_res.value = "数据解密成功";	
+				}	
+			}
+			
+			function p7_enc_dec_verifydata()
+			{
+				var plain = form1.pkcs7_enc_dec_plain.value;
+				var tmp = form1.pkcs7_enc_dec_tmp.value;
+				
+				if (plain == "") {
+					alert("原始数据为空!");
+					form1.pkcs7_enc_dec_plain.focus();
+					return;
+				}
+				if (tmp == "") {
+					alert("解密后的数据为空");
+					form1.pkcs7_enc_dec_tmp.focus();
+					return;
+				}
+				if (tmp == plain) {
+					form1.pkcs7_enc_dec_res.value = "解密后的数据和原始数据一致";	
+				} else {
+					form1.pkcs7_enc_dec_res.value = "解密后的数据和原始数据不一致";	
+				}
+			}
+		</script>	
+		<script language="JSCRIPT"> 
+			function getType(x) {
+ 
+    //如果x为null，则返回null
+    if (x == null) return "null";
+    var t = typeof x;
+    //如果x为简单类型，则返回类型名称
+    if (t.toLocaleLowerCase() != "object") return t;
+    //调用object类的toString方法得到类型信息
+    //object.toString方法返回类似这样的信息[object 类名]
+    t = Object.prototype.toString.apply(x).toLowerCase();
+    //截取toString方法返回值的类名部分
+    t = t.substring(8, t.length - 1);
+    if (t.toLocaleLowerCase() != "object") return t;
+    //检查x确实为object类型
+    if (x.constructor == Object) return t;
+    //从构造函数得到类型名称
+    if (typeof x.constructor == "function")
+        return getFunctionName(x.constructor);
+    return "unknow type";
+}
+			function p7_bin_enc_dec_test()
+			{
+				var certid = form1.pkcs7_enc_dec_certid.value;
+				var cert = form1.pkcs7_enc_dec_cert.value;
+				var indata = new Array(261);
+				var i;
+				for (i = 0; i < 255; i++) {
+					indata[i] = i;
+				}
+				/* 赵永省 */
+				indata[255] = 0xD5;
+				indata[256] = 0xD4;
+				indata[257] = 0xD3;
+				indata[258] = 0xC0;
+				indata[259] = 0xCA;
+				indata[260] = 0xA1;
+
+				var cipher = XTXAPP.SOF_EncryptBinaryData(cert, indata);
+				if (cipher == "") {
+					form1.pkcs7_enc_dec_res.value = "二进制数据加密失败";	
+					return;
+				}
+				alert(indata.length);
+				var abc = XTXAPP.SOF_DecryptBinaryData(certid, cipher);	
+				alert(getType(abc));
+//				+ "\n" + TypeName(abc));
+				var obj = new VBArray();
+				var rtn = obj.toArray();
+				alert(rtn.length);
+				/*
+				for(var nCntr = aryToDo.lbound(1); nCntr <= aryToDo.ubound(1); nCntr++)
+				{
+					var oOption = document.createElement("OPTION");
+					oOption.text = aryToDo.getItem(nCntr);
+					selToDo.add(oOption);
+				}
+				var abc = tmp.
+				alert(abc.length);
+				var ccc = tmp.toArray();
+				alert(ccc.length);
+				if (!tmp) {
+					form1.pkcs7_enc_dec_res.value = "二进制数据加密成功，解密失败";	
+				} else {
+					form1.pkcs7_enc_dec_res.value = "二进制数据数字信封加解密成功";
+				}
+				*/
+			}
+		</script>	
+		<tr class="alt">
+			<td>PKCS7数字信封加密解密</td>
+			<td>
+				<table>
+					<tr> 
+						<td class="right"> 数据原文: </td>
+						<td class="left"> 
+							<textarea name="pkcs7_enc_dec_plain" cols="60" rows="10" ></textarea>
+						</td>
+					</tr>
+					<tr> 
+						<td class="right"> 证书: </td>
+						<td class="left"> 
+							<textarea name="pkcs7_enc_dec_cert" cols="60" rows="10"></textarea>
+						</td>
+					</tr>
+					<tr> 
+						<td class="right"> 数字信封值: </td>
+						<td class="left"> 
+							<textarea name="pkcs7_enc_dec_cipher" cols="60" rows="10" ></textarea>
+						</td>
+					</tr>
+					
+					<tr> 
+						<td class="right"> CERTID: </td>
+						<td class="left"> 
+							<input type="text" name="pkcs7_enc_dec_certid" size="40">
+							<input type="button" value="获取CERTID" name="get_keysn" onclick="return get_cert_id()">
+						</td>
+					</tr>
+					<tr> 
+						<td class="right"> 解密后数据: </td>
+						<td class="left"> 
+							<textarea name="pkcs7_enc_dec_tmp" cols="60" rows="10" ></textarea>
+						</td>
+					</tr>
+					
+					<tr> 
+						<td colspan="2">
+							<input type="button" value="加密" name="pkcs7_enc_btn" onclick="return pkcs7_encrypt()">
+							<input type="button" value="解密" name="pkcs7_dec_btn" onclick="return pkcs7_decrypt()">
+							<input type="button" value="比较" name="pkcs7_enc_dec_verify_btn" onclick="return p7_enc_dec_verifydata()">
+							<!--<input type="button" value="二进制数据加解密" name="pkcs7_bin_enc_dec_btn" onclick="p7_bin_enc_dec_test()"> -->
+							<BUTTON ID="pkcs7_bin_enc_dec_btn" onClick="p7_bin_enc_dec_test()" STYLE="width:75px;margin-left:5">二进制数据加解密</BUTTON>
+						</td> 
+					<tr>
+				</table>
+			</td>
+			<td><input type="text" name="pkcs7_enc_dec_res" size="60"></td>
+		</tr>
+		
+		<script type="text/javascript">
+			//XML签名验签
+			function xml_sign()
+			{
+				var certid = form1.xml_sign_verify_certid.value;
+				var plain = form1.xml_sign_verify_plain.value;
+				
+				if (certid == "") {
+					alert("请输入CERTID");
+					form1.xml_sign_verify_certid.focus();
+					return;
+				}
+				if (plain == "") {
+					alert("请输入要签名的数据");
+					form1.pkcs7_sign_verify_plain.focus();
+					return;
+				}
+				//XTXAPP.SOF_SetSignMethod(0x00010004);
+				var ret = XTXAPP.SOF_SignDataXML(certid, plain);
+				form1.xml_sign_verify_sig.value = ret;	
+				if (ret == "") {
+					form1.xml_sign_verify_res.value = "XML数据签名失败";	
+				} else {
+					form1.xml_sign_verify_res.value = "XML数据签名成功";	
+				}	
+			}
+			
+			function xml_verify()
+			{
+				var sig = form1.xml_sign_verify_sig.value;
+				if (sig == "") {
+					alert("请输入签名值");
+					form1.xml_sign_verify_sig.focus();
+					return;
+				}
+
+				var ret = XTXAPP.SOF_VerifySignedDataXML(sig);
+				if (!ret) {
+					form1.xml_sign_verify_res.value = "XML数据验签失败";	
+				} else {
+					form1.xml_sign_verify_res.value = "XML数据验签成功";	
+				}	
+			}
+			
+			function xml_get_signer_info()
+			{
+				var sig = form1.xml_sign_verify_sig.value;
+				if (sig == "") {
+					alert("请输入签名值");
+					form1.xml_sign_verify_sig.focus();
+					return;
+				}
+				var type = form1.xml_sign_verify_type.value;
+
+				var ret = XTXAPP.SOF_GetXMLSignatureInfo(sig, type);
+				if (ret == "") {
+					form1.xml_sign_verify_res.value = "获取XML签名信息失败";	
+				} else {
+					form1.xml_sign_verify_res.value = ret;	
+				}		
+			}
+		</script>	
+		<tr class="alt">
+			<td>XML签名验签</td>
+			<td>
+				<table>
+					<tr> 
+						<td class="right"> CERTID: </td>
+						<td class="left"> 
+							<input type="text" name="xml_sign_verify_certid" size="40">
+							<input type="button" value="获取CERTID" name="get_keysn" onclick="return get_cert_id()">
+						</td>
+					</tr>
+					<tr> 
+						<td class="right"> 数据原文: </td>
+						<td class="left"> 
+							<textarea name="xml_sign_verify_plain" cols="60" rows="10" ></textarea>
+						</td>
+					</tr>
+					<tr> 
+						<td class="right"> 签名值: </td>
+						<td class="left"> 
+							<textarea name="xml_sign_verify_sig" cols="60" rows="5" ></textarea>
+						</td>
+					</tr>
+					</tr>
+						<td class="right"> 通过签名值获取信息: </td>
+						<td class="left"> 
+							<select name="xml_sign_verify_type">
+								<option value="1">原文</option>
+								<option value="2">摘要</option>
+								<option value="3">签名值</option>
+								<option value="4">签名证书</option>
+								<option value="5">摘要算法</option>
+								<option value="6">签名算法</option>
+							</select>
+							<input type="button" value="点击测试" name="xml_get_signer_info_btn" onclick="return xml_get_signer_info()">
+						</td>
+					</tr>	
+					<tr> 
+						<td colspan="2">
+							<input type="button" value="签名" name="pkcs7_sign_verify_btn" onclick="return xml_sign()">
+							<input type="button" value="验签" name="pkcs7_sign_verify_btn" onclick="return xml_verify()">
+						</td> 
+					<tr>
+				</table>
+			</td>
+			<td><input type="text" name="xml_sign_verify_res" size="60"></td>
+		</tr>
+		
+		<script type="text/javascript">
+			//密钥分割
+			function secret_seg()
+			{
+				var plain = form1.secret_seg_plain.value;
+				if (plain == "") {
+					alert("请输入要分割的数据");
+					form1.secret_seg_plain.focus();
+					return;
+				}
+				//XTXAPP.SOF_SetSignMethod(0x10004);
+				var ret = XTXAPP.SOF_SecertSegment(plain, 16, 8, 7);
+				form1.secret_seg_cipher.value = ret;	
+				if (ret == "") {
+					form1.secret_seg_res.value = "密钥分割失败";	
+				} else {
+					form1.secret_seg_res.value = "密钥分割成功";	
+				}	
+			}
+			
+			function secret_recovery()
+			{
+				var sig = form1.secret_seg_cipher.value;
+				if (sig == "") {
+					alert("请输入密文");
+					form1.secret_seg_cipher.focus();
+					return;
+				}
+
+				var ret = XTXAPP.SOF_SecertRecovery(sig);
+				if (ret == "") {
+					form1.secret_seg_res.value = "密钥恢复失败";	
+				} else {
+					form1.secret_seg_res.value = "密钥恢复成功[" + ret + "]";	
+				}	
+			}
+		</script>	
+		<tr class="alt">
+			<td>门限算法测试</td>
+			<td>
+				<table>
+					<tr> 
+						<td class="right"> 数据原文: </td>
+						<td class="left"> 
+							<textarea name="secret_seg_plain" cols="60" rows="5" ></textarea>
+						</td>
+					</tr>
+					<tr> 
+						<td class="right"> 分割后的数据: </td>
+						<td class="left"> 
+							<textarea name="secret_seg_cipher" cols="60" rows="10" ></textarea>
+						</td>
+					</tr>
+					<tr> 
+						<td colspan="2">
+							<input type="button" value="分割" name="secret_seg_btn" onclick="return secret_seg()">
+							<input type="button" value="恢复" name="secret_recovery_btn" onclick="return secret_recovery()">
+						</td> 
+					<tr>
+				</table>
+			</td>
+			<td><textarea name="secret_seg_res" cols="60" rows="5" ></textarea></td>
+		</tr>
+		
+		<script type="text/javascript">
+			//证书加密私钥解密
+			function pub_encrypt()
+			{
+				var plain = form1.pub_enc_pri_dec_plain.value;
+				var cert = form1.pub_enc_pri_dec_cert.value;
+				
+				if (plain == "") {
+					alert("请输入数据原文");
+					form1.pub_enc_pri_dec_plain.focus();
+					return;
+				}
+				if (cert == "") {
+					alert("请输入证书");
+					form1.pub_enc_pri_dec_cert.focus();
+					return;
+				}
+				//XTXAPP.SOF_SetEncryptMethod(258);
+				var ret = XTXAPP.SOF_PubKeyEncrypt(cert, plain);
+				form1.pub_enc_pri_dec_cipher.value = ret;	
+				if (ret == "") {
+					form1.pub_enc_pri_dec_res.value = "公钥数据加密失败";	
+				} else {
+					form1.pub_enc_pri_dec_res.value = "公钥数据加密成功";	
+				}	
+			}
+			
+			function pri_decrypt()
+			{
+				var certid = form1.pub_enc_pri_dec_certid.value;
+				if (certid == "") {
+					alert("请输入CERTID");
+					form1.pub_enc_pri_dec_certid.focus();
+					return;
+				}
+				
+				var cipher = form1.pub_enc_pri_dec_cipher.value;
+				if (cipher == "") {
+					alert("请输入密文数据");
+					form1.pub_enc_pri_dec_cipher.focus();
+					return;
+				}
+
+				var ret = XTXAPP.SOF_PriKeyDecrypt(certid, cipher);
+				form1.pub_enc_pri_dec_tmp.value = ret;
+				if (ret == "") {
+					form1.pub_enc_pri_dec_res.value = "数据解密失败";	
+				} else {
+					form1.pub_enc_pri_dec_res.value = "数据加密成功";	
+				}	
+			}
+			
+			function pub_enc_pri_dec_verifydata()
+			{
+				var plain = form1.pub_enc_pri_dec_plain.value;
+				var tmp = form1.pub_enc_pri_dec_tmp.value;
+				
+				if (plain == "") {
+					alert("原始数据为空!");
+					form1.pub_enc_pri_dec_plain.focus();
+					return;
+				}
+				if (tmp == "") {
+					alert("解密后的数据为空");
+					form1.pub_enc_pri_dec_tmp.focus();
+					return;
+				}
+				if (tmp == plain) {
+					form1.pub_enc_pri_dec_res.value = "解密后的数据和原始数据一致";	
+				} else {
+					form1.pub_enc_pri_dec_res.value = "解密后的数据和原始数据不一致";	
+				}
+			}
+		</script>	
+		<tr>
+			<td>公钥加密私钥解密测试</td>
+			<td>
+				<table>
+					<tr> 
+						<td class="right"> 数据原文: </td>
+						<td class="left"> 
+							<textarea name="pub_enc_pri_dec_plain" cols="60" rows="4" ></textarea>
+						</td>
+					</tr>
+					<tr> 
+						<td class="right"> 证书: </td>
+						<td class="left"> 
+							<textarea name="pub_enc_pri_dec_cert" cols="60" rows="10"></textarea>
+						</td>
+					</tr>
+					<tr> 
+						<td class="right"> 密文: </td>
+						<td class="left"> 
+							<textarea name="pub_enc_pri_dec_cipher" cols="60" rows="4" ></textarea>
+						</td>
+					</tr>
+					
+					<tr> 
+						<td class="right"> CERTID: </td>
+						<td class="left"> 
+							<input type="text" name="pub_enc_pri_dec_certid" size="40">
+							<input type="button" value="获取CERTID" name="get_keysn" onclick="return get_cert_id()">
+						</td>
+					</tr>
+					<tr> 
+						<td class="right"> 解密后数据: </td>
+						<td class="left"> 
+							<textarea name="pub_enc_pri_dec_tmp" cols="60" rows="4" ></textarea>
+						</td>
+					</tr>
+					
+					<tr> 
+						<td colspan="2">
+							<input type="button" value="加密" name="pub_enc_btn" onclick="return pub_encrypt()">
+							<input type="button" value="解密" name="pri_dec_btn" onclick="return pri_decrypt()">
+							<input type="button" value="比较" name="pub_enc_pri_dec_verify_btn" onclick="return pub_enc_pri_dec_verifydata()">
+						</td> 
+					<tr>
+				</table>
+			</td>
+			<td><input type="text" name="pub_enc_pri_dec_res" size="60"></td>
+		</tr>
+		
+		<tr>
+			<th colspan="3">软设备接口测试</th>
+		</tr>
+		
+		<script type="text/javascript">
+			//创建软设备
+			function createsoftdevice()
+			{
+				var keysn = form1.create_soft_device_keysn.value;
+				var label = form1.create_soft_device_label.value;
+				if (keysn == "") {
+					alert("请指定软设备序列号");
+					form1.create_soft_device_keysn.focus();
+				}
+				var bRet = XTXAPP.CreateSoftDevice(keysn, label);
+				if (bRet) {
+					form1.create_soft_device_res.value = "创建软设备[" + keysn + "]成功";
+				} else {
+					form1.create_soft_device_res.value = "创建软设备[" + keysn + "]失败";
+				}		
+			}
+		</script>
+		<tr>
+			<td>创建软设备测试</td>
+			<td>
+				<table>
+					<tr> 
+						<td class="right"> 软设备序列号: </td>
+						<td class="left"> 
+							<input type="text" name="create_soft_device_keysn" size="40">
+						</td>
+					</tr>
+					<tr> 
+						<td class="right"> 软设备标签: </td>
+						<td class="left"> 
+							<input type="text" name="create_soft_device_label" size="40">
+						</td>
+					</tr>
+					
+					<tr> 
+						<td colspan="2">
+							<input type="button" value="创建" name="create_soft_device__btn" onclick="return createsoftdevice()">
+						</td> 
+					<tr>
+				</table>
+			</td>
+			<td><input type="text" name="create_soft_device_res" size="60"></td>
+		</tr>
+		
+		<script type="text/javascript">
+			//删除软设备
+			function deletesoftdevice()
+			{
+				var keysn = form1.delete_soft_device_keysn.value;
+				var passwd = form1.delete_soft_device_pass.value;
+				if (keysn == "") {
+					alert("请指定软设备序列号");
+					form1.delete_soft_device_keysn.focus();
+				}
+				var bRet = XTXAPP.DeleteSoftDevice(keysn, passwd);
+				if (bRet) {
+					form1.delete_soft_device_res.value = "删除软设备[" + keysn + "]成功";
+				} else {
+					form1.delete_soft_device_res.value = "删除软设备[" + keysn + "]失败";
+				}		
+			}
+		</script>
+		<tr class="alt">
+			<td>删除软设备测试</td>
+			<td>
+				<table>
+					<tr> 
+						<td class="right"> 软设备序列号: </td>
+						<td class="left"> 
+							<input type="text" name="delete_soft_device_keysn" size="40">
+						</td>
+					</tr>
+					<tr> 
+						<td class="right"> 设备口令: </td>
+						<td class="left"> 
+							<input type="text" name="delete_soft_device_pass" size="40">
+						</td>
+					</tr>
+					
+					<tr> 
+						<td colspan="2">
+							<input type="button" value="删除" name="delete_soft_device__btn" onclick="return deletesoftdevice()">
+						</td> 
+					<tr>
+				</table>
+			</td>
+			<td><input type="text" name="delete_soft_device_res" size="60"></td>
+		</tr>
+		
+		
+		<script type="text/javascript">
+			//启用 禁用软设备
+			function enablesoftdevice()
+			{
+				var bRet = XTXAPP.EnableSoftDevice(true, "");
+				if (bRet) {
+					form1.enable_soft_device_res.value = "启用软设备成功";
+				} else {
+					form1.enable_soft_device_res.value = "启用软设备失败";
+				}		
+			}
+			
+			function disablesoftdevice()
+			{
+				var bRet = XTXAPP.EnableSoftDevice(false, "");
+				if (bRet) {
+					form1.enable_soft_device_res.value = "禁用软设备成功";
+				} else {
+					form1.enable_soft_device_res.value = "禁用软设备失败";
+				}		
+			}
+			
+		</script>
+		<tr>
+			<td>启用禁用软设备测试</td>
+			<td>
+				<table>	
+					<tr> 
+						<td colspan="2">
+							<input type="button" value="启用" name="enable_soft_device_btn" onclick="return enablesoftdevice()">
+							<input type="button" value="禁用" name="disable_soft_device_btn" onclick="return disablesoftdevice()">
+						</td> 
+					<tr>
+				</table>
+			</td>
+			<td><input type="text" name="enable_soft_device_res" size="60"></td>
+		</tr>
+		
+		<script type="text/javascript">
+			// 禁用硬设备		
+			function disableharddevice()
+			{
+				var bRet = XTXAPP.SetUserConfig(1, "off");
+				if (bRet) {
+					form1.enable_hard_device_res.value = "禁用硬设备成功";
+				} else {
+					form1.enable_hard_device_res.value = "禁用硬设备失败";
+				}		
+			}
+			
+			function enablewaitwindow()
+			{
+				var bRet = XTXAPP.SetUserConfig(2, "on");
+				if (bRet) {
+					form1.enable_hard_device_res.value = "启用等待窗口成功";
+				} else {
+					form1.enable_hard_device_res.value = "停用等待窗口失败";
+				}		
+			}
+			
+			function disablewaitwindow()
+			{
+				var bRet = XTXAPP.SetUserConfig(2, "off");
+				if (bRet) {
+					form1.enable_hard_device_res.value = "停用等待窗口成功";
+				} else {
+					form1.enable_hard_device_res.value = "停用等待窗口失败";
+				}		
+			}
+			
+		</script>
+		<tr>
+			<td>禁用硬设备测试</td>
+			<td>
+				<table>	
+					<tr> 
+						<td colspan="2">
+							<input type="button" value="禁用硬设备" name="enable_hard_device_btn" onclick="return disableharddevice()">
+							<input type="button" value="启用等待窗口" name="enable_wait_window_btn" onclick="return enablewaitwindow()">
+							<input type="button" value="停用等待窗口" name="diable_wait_window_btn" onclick="return disablewaitwindow()">
+						</td> 
+					<tr>
+				</table>
+			</td>
+			<td><input type="text" name="enable_hard_device_res" size="60"></td>
+		</tr>
+		
+		
+		<script type="text/javascript">
+			// 备份软设备
+			function backupsoftdevice()
+			{
+				var keysn = form1.backup_soft_device_keysn.value;
+				var passwd = form1.backup_soft_device_pass.value;
+				if (keysn == "") {
+					alert("请指定软设备序列号");
+					form1.backup_soft_device_keysn.focus();
+					return;
+				}
+				var file = XTXAPP.SoftDeviceBackup(keysn, passwd);
+				if (file == "") {
+					form1.backup_soft_device_res.value = "备份软设备[" + keysn + "]失败";
+				} else {
+					form1.backup_soft_device_res.value = "备份软设备[" + keysn + "]成功，输出路径[" + file + "]";
+				}		
+				
+				return;
+			}
+		</script>
+		<tr class="alt">
+			<td>备份软设备测试</td>
+			<td>
+				<table>
+					<tr> 
+						<td class="right"> 软设备序列号: </td>
+						<td class="left"> 
+							<input type="text" name="backup_soft_device_keysn" size="40">
+						</td>
+					</tr>
+					<tr> 
+						<td class="right"> 设备口令: </td>
+						<td class="left"> 
+							<input type="text" name="backup_soft_device_pass" size="40">
+						</td>
+					</tr>
+					<!--
+					<tr> 
+						<td class="right"> 输出文件: </td>
+						<td class="left"> 
+							<input type=file id=oFile_bakup style="display:none" onchange="backup_soft_device_file.value=this.value">
+							<input type=text name="backup_soft_device_file" size="60">
+							<input type=button value="选择文件" onclick="oFile_bakup.click()">
+						</td>
+					</tr>
+					-->
+					
+					<tr> 
+						<td colspan="2">
+							<input type="button" value="备份" name="backup_soft_device__btn" onclick="return backupsoftdevice()">
+						</td> 
+					<tr>
+				</table>
+			</td>
+			<td><input type="text" name="backup_soft_device_res" size="60"></td>
+		</tr>
+		
+		
+		<script type="text/javascript">
+			// 备份软设备
+			function opensoftbackupfile()
+			{
+				var strfilepath = form1.open_backup_file_keysn.value;
+
+				XTXAPP.OpenSpecifiedFolder(strfilepath);	
+				
+				return;
+			}
+		</script>
+		<tr class="alt">
+			<td>打开软证书备份路径</td>
+			<td>
+				<table>
+					<tr> 
+						<td class="right"> 备份文件全路径: </td>
+						<td class="left"> 
+							<input type="text" name="open_backup_file_keysn" size="40">
+						</td>
+					</tr>
+					
+					<tr> 
+						<td colspan="2">
+							<input type="button" value="打开" name="backup_soft_device__btn" onclick="return opensoftbackupfile()">
+						</td> 
+					<tr>
+				</table>
+			</td>
+			<td></td>
+		</tr>
+		
+		<script type="text/javascript">
+			// 恢复软设备
+			function restoresoftdevice()
+			{
+				var keysn = form1.restore_soft_device_keysn.value;
+				var passwd = form1.restore_soft_device_pass.value;
+				var file_ = form1.restore_soft_device_file.value;
+				alert(file_);
+				var bRet = XTXAPP.SoftDeviceRestore(keysn, passwd, file_);
+				if (bRet) {
+					form1.restore_soft_device_res.value = "恢复软设备[" + keysn + "]成功";
+				} else {
+					form1.restore_soft_device_res.value = "恢复软设备[" + keysn + "]失败";
+				}		
+			}
+		</script>
+		<tr>
+			<td>恢复软设备测试</td>
+			<td>
+				<table>
+					<tr> 
+						<td class="right"> 软设备序列号: </td>
+						<td class="left"> 
+							<input type="text" name="restore_soft_device_keysn" size="40">
+						</td>
+					</tr>
+					<tr> 
+						<td class="right"> 备份口令: </td>
+						<td class="left"> 
+							<input type="text" name="restore_soft_device_pass" size="40">
+						</td>
+					</tr>
+					<tr> 
+						<td class="right"> 输入文件: </td>
+						<td class="left"> 
+							<input type=file id=oFile_restore style="display:none" onchange="restore_soft_device_file.value=this.value">
+							<input type=text name="restore_soft_device_file" size="60">
+							<input type=button value="选择文件" onclick="oFile_restore.click()">
+						</td>
+					</tr>
+					
+					<tr> 
+						<td colspan="2">
+							<input type="button" value="恢复" name="restore_soft_device__btn" onclick="return restoresoftdevice()">
+						</td> 
+					<tr>
+				</table>
+			</td>
+			<td><input type="text" name="restore_soft_device_res" size="60"></td>
+		</tr>
+		
+		<script type="text/javascript">
+			// 导入明文私钥和证书
+			function importplainkeycert()
+			{
+				var keysn = form1.import_plain_key_keysn.value;
+				var conName = form1.import_plain_key_containerName.value;
+				var prikey = form1.import_plain_key_prikey.value;
+				var cert = form1.import_plain_key_cert.value;
+				var bsign = form1.import_plain_key_bsign.value;
+				
+				var bRet = XTXAPP.ImportKeyCertToSoftDevice(keysn, conName, prikey, cert, bsign);
+				if (bRet) {
+					form1.import_plain_key_res.value = "导入明文私钥和证书成功";
+				} else {
+					form1.import_plain_key_res.value = "导入明文私钥和证书失败";
+				}		
+			}
+		</script>
+		<tr>
+			<td>导入明文私钥和证书测试</td>
+			<td>
+				<table>
+					<tr> 
+						<td class="right"> 软设备序列号: </td>
+						<td class="left"> 
+							<input type="text" name="import_plain_key_keysn" size="40">
+						</td>
+					</tr>
+					<tr> 
+						<td class="right"> 容器名: </td>
+						<td class="left"> 
+							<input type="text" name="import_plain_key_containerName" size="40">
+						</td>
+					</tr>
+					<tr> 
+						<td class="right"> 私钥: </td>
+						<td class="left"> 
+							<textarea name="import_plain_key_prikey" cols="60" rows="4" ></textarea>
+						</td>
+					</tr>
+					<tr> 
+						<td class="right"> 证书: </td>
+						<td class="left"> 
+							<textarea name="import_plain_key_cert" cols="60" rows="4" ></textarea>
+						</td>
+					</tr>
+					<tr>
+						<td class="right"> 密钥位置: </td>
+						<td class="left"> 
+							<select name="import_plain_key_bsign">
+								<option value=true>签名</option>
+								<option value=false>加密</option>
+							</select>
+						</td>
+					</tr>
+					
+					<tr> 
+						<td colspan="2">
+							<input type="button" value="点击测试" name="import_plain_key_btn" onclick="return importplainkeycert()">
+						</td> 
+					<tr>
+				</table>
+			</td>
+			<td><input type="text" name="import_plain_key_res" size="60"></td>
+		</tr>
+		
+		<script type="text/javascript">
+			// 导入Pfx 只支持软证书
+			function import_pfx()
+			{
+				var keysn = form1.import_pfx_key_keysn.value;
+				var conName = form1.import_pfx_containerName.value;
+				var p12path = form1.import_pfx_pfx.value;
+				var passwd = form1.import_pfx_passwd.value;
+				var bsign = form1.import_pfx_bsign.value;
+				
+				var bRet = XTXAPP.ImportPfxToDevice(keysn, conName, bsign, p12path, passwd);
+				if (bRet) {
+					form1.import_pfx_res.value = "导入PKCS12文件成功";
+				} else {
+					form1.import_pfx_res.value = "导入PKCS12文件失败";
+				}		
+			}
+		</script>
+		<tr>
+			<td>导入PKCS12文件</td>
+			<td>
+				<table>
+					<tr> 
+						<td class="right"> 软设备序列号: </td>
+						<td class="left"> 
+							<input type="text" name="import_pfx_key_keysn" size="40">
+						</td>
+					</tr>
+					<tr> 
+						<td class="right"> 容器名: </td>
+						<td class="left"> 
+							<input type="text" name="import_pfx_containerName" size="40">
+						</td>
+					</tr>
+					<tr> 
+						<td class="right"> PKCS文件: </td>
+						<td class="left"> 
+							<textarea name="import_pfx_pfx" cols="60" rows="4" ></textarea>
+						</td>
+					</tr>
+					<tr> 
+						<td class="right"> PKCS密码: </td>
+						<td class="left"> 
+							<input type="text" name="import_pfx_passwd" size="40">
+						</td>
+					</tr>
+					<tr>
+						<td class="right"> 密钥位置: </td>
+						<td class="left"> 
+							<select name="import_pfx_bsign">
+								<option value=true>签名</option>
+								<option value=false>加密</option>
+							</select>
+						</td>
+					</tr>
+					
+					<tr> 
+						<td colspan="2">
+							<input type="button" value="点击测试" name="import_pfx_btn" onclick="return import_pfx()">
+						</td> 
+					<tr>
+				</table>
+			</td>
+			<td><input type="text" name="import_pfx_res" size="60"></td>
+		</tr>
+		
+		<script type="text/javascript">
+			// OTP Key获取挑战码
+			function otp_getchallengecode()
+			{
+				var certid = form1.otp_getchallengecode_certid.value;
+				if (certid == "") {
+					alert("请指定CERTID");
+					return;
+				}
+				var str = XTXAPP.OTP_GetChallengeCodeEx(certid, "1234567890", 300);
+				if (str.length > 0) {
+					form1.otp_getchallengecode_res.value = "获取挑战码成功[" + str + "]";
+				} else {
+					form1.otp_getchallengecode_res.value = "获取挑战码失败!";
+				}		
+			}
+		</script>
+		<tr>
+			<td>OTP 获取应答码</td>
+			<td>
+				<table>
+					<tr> 
+						<td class="right"> CERTID: </td>
+						<td class="left"> 
+							<input type="text" name="otp_getchallengecode_certid" size="40">
+							<input type="button" value="获取CERTID" name="get_keysn" onclick="return get_cert_id()">
+						</td>
+					</tr>
+					
+					<tr> 
+						<td colspan="2">
+							<input type="button" value="获取" name="otp_getchallengecode_certid_btn" onclick="return otp_getchallengecode()">
+						</td> 
+					<tr>
+				</table>
+			</td>
+			<td><input type="text" name="otp_getchallengecode_res" size="60"></td>
+		</tr>
+		
+		
+		<script type="text/javascript">
+			function hamc()
+			{
+				var key = form1.hmac_key.value;
+				var plain = form1.hmac_plain.value;
+				var hashid = form1.hamc_hashid.value
+				var str = XTXAPP.SOF_HMAC(hashid, key, plain);
+				if (str.length > 0) {
+					form1.hamc_res.value = str;
+				} else {
+					form1.hamc_res.value = "计算HMAC失败!";
+				}		
+			}
+		</script>
+		<tr>
+			<td>HMAC运算</td>
+			<td>
+				<table>
+					<tr> 
+						<td class="right"> 密钥(Base64格式): </td>
+						<td class="left"> 
+							<input type="text" name="hmac_key" size="40">
+						</td>
+					</tr>
+					
+					<tr> 
+						<td class="right"> 数据原文: </td>
+						<td class="left"> 
+							<textarea name="hmac_plain" cols="60" rows="4" ></textarea>
+						</td>
+					</tr>
+					
+					<tr>
+						<td class="right"> 摘要算法: </td>
+						<td class="left"> 
+							<select name="hamc_hashid">
+								<option value=2>SHA1</option>
+								<option value=4>SHA256</option>
+							</select>
+						</td>
+					</tr>
+					
+					<tr> 
+						<td colspan="2">
+							<input type="button" value="计算HMAC" name="hamc_btn" onclick="return hamc()">
+						</td> 
+					<tr>
+				</table>
+			</td>
+			<td><input type="text" name="hamc_res" size="60"></td>
+		</tr>
+		
+		<script type="text/javascript">
+			// 选择文件
+			function get_select_file()
+			{
+				var str = XTXAPP.SelectFile();
+				if (str.length > 0) {
+					form1.get_select_file_.value = str;
+					form1.get_select_file_res.value = "选择文件成功";
+				} else {
+					form1.get_select_file_.value = "";
+					form1.get_select_file_res.value = "没有选择文件";
+				}		
+			}
+		</script>
+		<tr>
+			<td>OTP 获取应答码</td>
+			<td>
+				<table>
+					<tr> 
+						<td class="right"> 文件全路径: </td>
+						<td class="left"> 
+							<input type="text" name="get_select_file_" size="60">
+							<input type="button" value="选择文件" name="get_select_file_btn" onclick="return get_select_file()">
+						</td>
+					</tr>
+				</table>
+			</td>
+			<td><input type="text" name="get_select_file_res" size="60"></td>
+		</tr>
+		
+		<script type="text/javascript">
+			// 选择文件
+			function sof_udpate_cert()
+			{
+				var certid = form1.sof_export_user_enccert_certid.value;
+				var ret = XTXAPP.SOF_UpdateCert(certid, 1);
+				form1.sof_update_cert_res.value = "更新证书返回值[" + ret + "]";		
+			}
+		</script>
+		<tr>
+			<td>通过CSS更新证书</td>
+			<td>
+				<table>
+					<tr> 
+						<td class="right"> CERTID: </td>
+						<td class="left"> 
+							<input type="text" name="sof_update_cert_certid" size="40">
+							<input type="button" value="获取CERTID" name="get_keysn" onclick="return get_cert_id()">
+						</td>
+					</tr>
+					<tr> 
+						<td colspan="2"><input type="button" value="点击测试" name="sof_update_cert_btn" onclick="return sof_udpate_cert()"></td> 
+					<tr>
+				</table>
+				
+			</td>
+			<td><input type="text" name="sof_update_cert_res" size="60"></td>
+		</tr>
+		
+	</table>
+	</form>	
+	
+	<SCRIPT LANGUAGE=JAVASCRIPT event=OnLoad for=window>
+		GetUserList("form1.login_test_certlst");
+	</SCRIPT>
+		
+	<SCRIPT LANGUAGE=javascript event=OnUsbKeyChange for=XTXAPP>
+		//alert("OnUsbKeyChange");
+		ChangeUserList("form1.login_test_certlst");
+	</SCRIPT>
+</body>
+</html>

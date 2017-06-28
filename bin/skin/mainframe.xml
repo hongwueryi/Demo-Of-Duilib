@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Window size="910,610" sizebox="4,4,6,6" roundcorner="5,5" caption="0,0,0,90" >
+  <Font name="微软雅黑" size="12" />
+  <Font name="宋体" size="16" bold="true" />
+  <Font name="微软雅黑" size="18" />
+  <Font name="华文彩云" size="22" />
+  <Font name="Times New Roman" size="22" />
+  <Font name="微软雅黑" size="22" />
+  
+  <Default name="VScrollBar" value="button1normalimage=&quot;file='Res/scrollbar.bmp' source='0,90,16,106' mask='#FFFF00FF'&quot; button1hotimage=&quot;file='Res/scrollbar.bmp' source='18,90,34,106' mask='#FFFF00FF'&quot; button1pushedimage=&quot;file='Res/scrollbar.bmp' source='36,90,52,106' mask='#FFFF00FF'&quot; button1disabledimage=&quot;file='Res/scrollbar.bmp' source='54,90,70,106' mask='#FFFF00FF'&quot; button2normalimage=&quot;file='Res/scrollbar.bmp' source='0,108,16,124' mask='#FFFF00FF'&quot; button2hotimage=&quot;file='Res/scrollbar.bmp' source='18,108,34,124' mask='#FFFF00FF'&quot; button2pushedimage=&quot;file='Res/scrollbar.bmp' source='36,108,52,124' mask='#FFFF00FF'&quot; button2disabledimage=&quot;file='Res/scrollbar.bmp' source='54,108,70,124' mask='#FFFF00FF'&quot; thumbnormalimage=&quot;file='Res/scrollbar.bmp' source='0,126,16,142' corner='2,2,2,2' mask='#FFFF00FF'&quot; thumbhotimage=&quot;file='Res/scrollbar.bmp' source='18,126,34,142' corner='2,2,2,2' mask='#FFFF00FF'&quot; thumbpushedimage=&quot;file='Res/scrollbar.bmp' source='36,126,52,142' corner='2,2,2,2' mask='#FFFF00FF'&quot; thumbdisabledimage=&quot;file='Res/scrollbar.bmp' source='54,126,70,142' corner='2,2,2,2' mask='#FFFF00FF'&quot; railnormalimage=&quot;file='Res/scrollbar.bmp' source='0,144,16,160' corner='2,2,2,2' mask='#FFFF00FF'&quot; railhotimage=&quot;file='Res/scrollbar.bmp' source='18,144,34,160' corner='2,2,2,2' mask='#FFFF00FF'&quot; railpushedimage=&quot;file='Res/scrollbar.bmp' source='36,144,52,160' corner='2,2,2,2' mask='#FFFF00FF'&quot; raildisabledimage=&quot;file='Res/scrollbar.bmp' source='54,144,70,160' corner='2,2,2,2' mask='#FFFF00FF'&quot; bknormalimage=&quot;file='Res/scrollbar.bmp' source='0,162,16,178' corner='2,2,2,2' mask='#FFFF00FF'&quot; bkhotimage=&quot;file='Res/scrollbar.bmp' source='18,162,34,178' corner='2,2,2,2' mask='#FFFF00FF'&quot; bkpushedimage=&quot;file='Res/scrollbar.bmp' source='36,162,52,178' corner='2,2,2,2' mask='#FFFF00FF'&quot; bkdisabledimage=&quot;file='Res/scrollbar.bmp' source='54,162,70,178' corner='2,2,2,2' mask='#FFFF00FF'&quot; " />
+  <Default name="HScrollBar" value="button1normalimage=&quot;file='Res/scrollbar.bmp' source='0,0,16,16' mask='#FFFF00FF'&quot; button1hotimage=&quot;file='Res/scrollbar.bmp' source='18,0,34,16' mask='#FFFF00FF'&quot; button1pushedimage=&quot;file='Res/scrollbar.bmp' source='36,0,52,16' mask='#FFFF00FF'&quot; button1disabledimage=&quot;file='Res/scrollbar.bmp' source='54,0,70,16' mask='#FFFF00FF'&quot; button2normalimage=&quot;file='Res/scrollbar.bmp' source='0,18,16,34' mask='#FFFF00FF'&quot; button2hotimage=&quot;file='Res/scrollbar.bmp' source='18,18,34,34' mask='#FFFF00FF'&quot; button2pushedimage=&quot;file='Res/scrollbar.bmp' source='36,18,52,34' mask='#FFFF00FF'&quot; button2disabledimage=&quot;file='Res/scrollbar.bmp' source='54,18,70,34' mask='#FFFF00FF'&quot; thumbnormalimage=&quot;file='Res/scrollbar.bmp' source='0,36,16,52' corner='2,2,2,2' mask='#FFFF00FF'&quot; thumbhotimage=&quot;file='Res/scrollbar.bmp' source='18,36,34,52' corner='2,2,2,2' mask='#FFFF00FF'&quot; thumbpushedimage=&quot;file='Res/scrollbar.bmp' source='36,36,52,52' corner='2,2,2,2' mask='#FFFF00FF'&quot; thumbdisabledimage=&quot;file='Res/scrollbar.bmp' source='54,36,70,52' corner='2,2,2,2' mask='#FFFF00FF'&quot; railnormalimage=&quot;file='Res/scrollbar.bmp' source='0,54,16,70' corner='2,2,2,2' mask='#FFFF00FF'&quot; railhotimage=&quot;file='Res/scrollbar.bmp' source='18,54,34,70' corner='2,2,2,2' mask='#FFFF00FF'&quot; railpushedimage=&quot;file='Res/scrollbar.bmp' source='36,54,52,70' corner='2,2,2,2' mask='#FFFF00FF'&quot; raildisabledimage=&quot;file='Res/scrollbar.bmp' source='54,54,70,70' corner='2,2,2,2' mask='#FFFF00FF'&quot; bknormalimage=&quot;file='Res/scrollbar.bmp' source='0,72,16,88' corner='2,2,2,2' mask='#FFFF00FF'&quot; bkhotimage=&quot;file='Res/scrollbar.bmp' source='18,72,34,88' corner='2,2,2,2' mask='#FFFF00FF'&quot; bkpushedimage=&quot;file='Res/scrollbar.bmp' source='36,72,52,88' corner='2,2,2,2' mask='#FFFF00FF'&quot; bkdisabledimage=&quot;file='Res/scrollbar.bmp' source='54,72,70,88' corner='2,2,2,2' mask='#FFFF00FF'&quot; " />
+  <Default name="Slider" value="thumbsize=&quot;10,10&quot; bkimage=&quot;file='Res/page1/bg.bmp' corner='6,0,6,0' mask='#FFFF00FF'&quot; foreimage=&quot;file='Res/page1/fg.bmp' corner='6,0,6,0' mask='#FFFF00FF'&quot; thumbimage=&quot;file='Res/page1/thumb.bmp' source='30,0,40,10' mask='#FFDAEBF9'&quot; thumbhotimage=&quot;file='Res/page1/thumb.bmp' source='10,0,20,10' mask='#FFDAEBF9'&quot; " />
+	
+  <VerticalLayout>
+  <VerticalLayout name="BigWnd" visible="true">
+	<VerticalLayout height="118" name="bg" bkimage="file='Res/bg.png'" >
+    <HorizontalLayout height="33" inset="0,3,0,0">
+      <HorizontalLayout>
+        <Text text="Duilib基本控件" pos="15, 10, 200, 50" float="true" textcolor="#FFFFFF" font="0" />
+		
+      </HorizontalLayout>
+	  <HorizontalLayout width="40" height="30">
+		<Button name="hidebottompage" maxwidth="26" inset="200,10,0,0" normalimage="Res/medal.png"/>
+	  </HorizontalLayout>
+      <HorizontalLayout width="180">
+		<ButtonGif height="24" width="24"  NormalGifFile="Res/hand.gif" />
+		<Button name="skinbtn" maxwidth="27" maxheight="22" normalimage="Res/skin_normal.png" hotimage="Res/skin_hover.png" pushedimage="Res/skin_pressed.png"/>
+		<Button name="feedbackbtn" maxwidth="27" maxheight="22" normalimage="Res/feedback_normal.png" hotimage="Res/feedback_hover.png" pushedimage="Res/feedback_pressed.png"/>
+		<Button name="maxbtn" maxwidth="27" maxheight="22" normalimage="Res/menu_normal.png" hotimage="Res/menu_hover.png" pushedimage="Res/menu_pressed.png"/>
+		<Button name="minbtn" maxwidth="27" maxheight="22" normalimage="Res/min_normal.png" hotimage="Res/min_hover.png" pushedimage="Res/min_pressed.png"/>
+        <Button name="closebtn" maxwidth="27" maxheight="22" normalimage="Res/close_normal.png" hotimage="Res/close_hover.png" pushedimage="Res/close_pressed.png"/>
+      </HorizontalLayout>
+    </HorizontalLayout>
+	<HorizontalLayout height="85">
+		<HorizontalLayout>
+			<Option name="option1" pos="15,10,85,85" float="true" align="bottom" text="电脑体检" textpadding="11,55,0,0" font="0" textcolor="#FFFFFF" selected="true" foreimage="file='Res/ico_Examine.png' dest='11,5,59,53'" normalimage="Res/toolbar_normal.png" hotimage="file='Res/toolbar_hover.png' source='80,0,160,75'" pushedimage="file='Res/toolbar_hover.png' source='80,0,160,75'" selectedimage="file='Res/toolbar_hover.png' source='80,0,160,75'" group="main_toolbar" selected="true"/>
+			<Option name="option2" pos="97,10,167,85" float="true" align="bottom" text="木马查杀" textpadding="11,55,0,0" font="0" textcolor="#FFFFFF" selected="true" foreimage="file='Res/ico_dsmain.png' dest='11,5,59,53'" normalimage="Res/toolbar_normal.png" hotimage="file='Res/toolbar_hover.png' source='80,0,160,75'" pushedimage="file='Res/toolbar_hover.png' source='80,0,160,75'"  selectedimage="file='Res/toolbar_hover.png' source='80,0,160,75'" group="main_toolbar" selected="false"/>
+			<Option name="option3" pos="179,10,249,85" float="true" align="bottom" text="系统修复" textpadding="11,55,0,0" font="0" textcolor="#FFFFFF" selected="true" foreimage="file='Res/ico_SysRepair.png' dest='11,5,59,53'" normalimage="Res/toolbar_normal.png" hotimage="file='Res/toolbar_hover.png' source='80,0,160,75'" pushedimage="file='Res/toolbar_hover.png' source='80,0,160,75'"  selectedimage="file='Res/toolbar_hover.png' source='80,0,160,75'" group="main_toolbar" selected="false"/>
+			<Option name="option4" pos="261,10,331,85" float="true" align="bottom" text="电脑清理" textpadding="11,55,0,0" font="0" textcolor="#FFFFFF" selected="true" foreimage="file='Res/ico_TraceCleaner.png' dest='11,5,59,53'" normalimage="Res/toolbar_normal.png" hotimage="file='Res/toolbar_hover.png' source='80,0,160,75'" pushedimage="file='Res/toolbar_hover.png' source='80,0,160,75'"  selectedimage="file='Res/toolbar_hover.png' source='80,0,160,75'" group="main_toolbar" selected="false"/>
+			<Option name="option5" pos="343,10,413,85" float="true" align="bottom" text="优化加速" textpadding="11,55,0,0" font="0" textcolor="#FFFFFF" selected="true" foreimage="file='Res/ico_SpeedupOpt.png' dest='11,5,59,53'" normalimage="Res/toolbar_normal.png" hotimage="file='Res/toolbar_hover.png' source='80,0,160,75'" pushedimage="file='Res/toolbar_hover.png' source='80,0,160,75'"  selectedimage="file='Res/toolbar_hover.png' source='80,0,160,75'" group="main_toolbar" selected="false"/>
+			<Option name="option6" pos="425,10,495,85" float="true" align="bottom" text="电脑专家" textpadding="11,55,0,0" font="0" textcolor="#FFFFFF" selected="true" foreimage="file='Res/ico_expert.png' dest='11,5,59,53'" normalimage="Res/toolbar_normal.png" hotimage="file='Res/toolbar_hover.png' source='80,0,160,75'" pushedimage="file='Res/toolbar_hover.png' source='80,0,160,75'"  selectedimage="file='Res/toolbar_hover.png' source='80,0,160,75'" group="main_toolbar" selected="false"/>
+			<Option name="option7" pos="507,10,577,85" float="true" align="bottom" text="电脑门诊" textpadding="11,55,0,0" font="0" textcolor="#FFFFFF" selected="true" foreimage="file='Res/ico_diannaomenzhen.png' dest='11,5,59,53'" normalimage="Res/toolbar_normal.png" hotimage="file='Res/toolbar_hover.png' source='80,0,160,75'" pushedimage="file='Res/toolbar_hover.png' source='80,0,160,75'"  selectedimage="file='Res/toolbar_hover.png' source='80,0,160,75'" group="main_toolbar" selected="false"/>
+			<Option name="option8" pos="589,10,659,85" float="true" align="bottom" text="软件管家" textpadding="11,55,0,0" font="0" textcolor="#FFFFFF" selected="true" foreimage="file='Res/ico_softmgr.png' dest='11,5,59,53'" normalimage="Res/toolbar_normal.png" hotimage="file='Res/toolbar_hover.png' source='80,0,160,75'" pushedimage="file='Res/toolbar_hover.png' source='80,0,160,75'"  selectedimage="file='Res/toolbar_hover.png' source='80,0,160,75'" group="main_toolbar" selected="false"/>
+		</HorizontalLayout>
+		<HorizontalLayout width="180" inset="0,15,1,0">
+			<Button maxwidth="148" maxheight="62" bkimage="file='Res/logo.png'"/>
+		</HorizontalLayout>
+	</HorizontalLayout>
+	</VerticalLayout>
+	<HorizontalLayout name="bottompage" >
+		<TabLayout name="switch">
+			<HorizontalLayout>
+				<page1 /> <!-- 需要有空格-->
+			</HorizontalLayout>
+			<HorizontalLayout>
+				<page2 />
+			</HorizontalLayout>
+			<HorizontalLayout>
+				<page3 />
+			</HorizontalLayout>
+			<HorizontalLayout bkcolor="#FFE3E3E3">
+				<VerticalLayout>
+					<HorizontalLayout height="70" inset="10,20,10,20">
+						<Edit name="ActiveXWebAddress" bordercolor="#FFFFFFFF" width="750" bordersize="1" />
+						<Button name="openActiveXBrowser" width="30" text="【GO】" />
+					</HorizontalLayout>
+					<HorizontalLayout>
+					<ActiveX name="ActiveXDemo1" clsid="{8856F961-340A-11D0-A96B-00C04FD705A2}" delaycreate="false" float="false" pos="0,0,-0,-0" />
+					</HorizontalLayout>
+				</VerticalLayout>
+			</HorizontalLayout>
+			<HorizontalLayout bkcolor="#FFE3E3E3">
+				<page5 />
+			</HorizontalLayout>
+			<HorizontalLayout bkcolor="#FFE3E3E3">
+				<Text text="flash插件" padding="0,200,0,0"/>
+				<ActiveX name="flash" clsid="{D27CDB6E-AE6D-11CF-96B8-444553540000}" mouse="false"/>
+			</HorizontalLayout>
+			<VerticalLayout bkcolor="#FFE3E3E3">
+				<Text text="wkeWebkit" />
+				<Control height="20"/>
+				<Text text="华文彩云" font ="3" />
+				<Control height="20"/>
+				<Text text="Times New Roman" font ="4" />
+				<Control height="20"/>
+				<Text text="繁體中文" font ="5" />
+				<!--<page6 /> -->
+			</VerticalLayout>
+			<HorizontalLayout bkcolor="#FFE3E3E3" menu="true">
+				<!--<Text text="软件管家" />-->
+				<Button name="menuTest" text="菜单测试" width="75" height="24" normalimage="Res/button_nor.bmp"/>
+			</HorizontalLayout>
+		</TabLayout>
+	</HorizontalLayout>
+	 
+  </VerticalLayout>
+  <VerticalLayout name="scalewnd" visible="false"  bkcolor="#FF00FF00">
+  </VerticalLayout>
+  
+  </VerticalLayout>
+</Window>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Window>
+  <ListContainerElement >
+	<VerticalLayout>
+	<HorizontalLayout>
+		<Label text="测试文本"  width="100" bordersize="1" height="20" name="domain" />
+		<Control />
+		<Button name="expandItemEx" text="收起" height="20" width="50" />
+	</HorizontalLayout>
+	<HorizontalLayout>
+		<CheckBox name="selectme" endellipsis="true"  text="亲，选我吧！" textcolor="#FF386382" hottextcolor="#FF386382" selectedtextcolor="#FF386382" disabledtextcolor="#FFbac0c5" textpadding="20,3,0,0" align="left" selectedimage="file='Res/page2/checked.png' dest='0,2,16,18'" normalimage="file='Res/page2/unchecked.png' dest='0,2,16,18'"  />
+		<HorizontalLayout inset="4,4,4,4">
+			<Edit text="测试文本" bordersize="1" height="20" bordercolor="#FF4775CC" name="domain" ></Edit>
+		</HorizontalLayout>
+		<HorizontalLayout>
+			<VerticalLayout>
+			<Button name="additembtnEx" text="按钮1" width="50" pushedimage="Res/button_down.bmp" hotimage="Res/button_over.bmp" normalimage="Res/button_nor.bmp" ></Button>
+			<Button name="deleteItemEx" text="删除" width="50" pushedimage="Res/button_down.bmp" hotimage="Res/button_over.bmp" normalimage="Res/button_nor.bmp" ></Button>
+			<Label text="这是从XML文件中加载的列表项"></Label>
+			</VerticalLayout>
+		</HorizontalLayout>
+	</HorizontalLayout>
+	</VerticalLayout>
+    </ListContainerElement>
+</Window>

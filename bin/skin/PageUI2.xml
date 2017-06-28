@@ -1,0 +1,51 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Window>
+  <VerticalLayout bkcolor="#FFFFFFFF" bordercolor="#FF3E3E3E" bordersize="1" inset="5,2,5,2">
+	<Control height="20" />
+    <!---------------------------------------List--------------------------------------------->
+	<Label height="1" bkimage="Res/page1/hor_line.bmp" />
+	<HorizontalLayout height="120" inset="0,10,0,10">
+		<Label text="List控件" glowsize="20" font="1" textcolor="#FF555555" width="80"/>
+		<VerticalLayout inset="2,2,2,2" bordersize="1" bordercolor="#FF666666">
+			<List name="listview" vscrollbar="true" hscrollbar="true" headerbkimage="file='Res/page2/list_header_bg.png'" itemalign="center">
+				<ListHeader height="24" menu="true">
+					<ListHeaderItem text="姓名" width="200" hotimage="file='Res/page2/list_header_hot.png'" pushedimage="file='Res/page2/list_header_pushed.png'" sepimage="file='Res/page2/list_header_sep.png'" sepwidth="1" />
+					<ListHeaderItem text="学号" width="200" hotimage="file='Res/page2/list_header_hot.png'" pushedimage="file='Res/page2/list_header_pushed.png'" sepimage="file='Res/page2/list_header_sep.png'" sepwidth="1" />
+					<ListHeaderItem text="成绩"  hotimage="file='Res/page2/list_header_hot.png'" pushedimage="file='Res/page2/list_header_pushed.png'" sepimage="file='Res/page2/list_header_sep.png'" sepwidth="1" />
+				</ListHeader>
+			</List>				
+		</VerticalLayout>
+	</HorizontalLayout>
+	<!---------------------------------------ListEx--------------------------------------------->
+	<Label height="1" bkimage="Res/page1/hor_line.bmp" />
+	<HorizontalLayout  inset="0,10,0,10">
+		<Label text="ListEx控件" glowsize="20" font="1" textcolor="#FF555555" width="100"/>
+		<VerticalLayout inset="2,2,2,2" bordersize="1" bordercolor="#FF666666">
+			<List name="listex" vscrollbar="true" hscrollbar="true" headerbkimage="file='Res/page2/list_header_bg.png'" itemalign="center">
+				<ListHeader height="24" menu="true" >
+					<ListHeaderItem text="姓名" dragable="false" mimwidth="100" hotimage="file='Res/page2/list_header_hot.png'" pushedimage="file='Res/page2/list_header_pushed.png'" sepimage="file='Res/page2/list_header_sep.png'" sepwidth="1" />
+					<ListHeaderItem text="学号" dragable="false" mimwidth="100" hotimage="file='Res/page2/list_header_hot.png'" pushedimage="file='Res/page2/list_header_pushed.png'" sepimage="file='Res/page2/list_header_sep.png'" sepwidth="1" />
+					<ListHeaderItem text="成绩" dragable="false" mimwidth="100" hotimage="file='Res/page2/list_header_hot.png'" pushedimage="file='Res/page2/list_header_pushed.png'" sepimage="file='Res/page2/list_header_sep.png'" sepwidth="1" />
+				</ListHeader>
+			</List>				
+		</VerticalLayout>
+		<VerticalLayout width="200" inset="20,10,0,0" childpadding="40">
+		<Button name="addListEx" text="【通过代码动态添加】" width="120"/>
+		<Button name="addListExbyXML" text="【通过xml动态添加】" width="120"/>
+		</VerticalLayout>
+	</HorizontalLayout>
+	<!---------------------------------------DateTime--------------------------------------------->
+	<Label height="1" bkimage="Res/page1/hor_line.bmp" />
+	<Control height="20" />
+	<HorizontalLayout height="30">
+		<Label text="时间控件" textcolor="#FF555555" glowsize="0" font="1" width="80" />
+		<VerticalLayout bordersize="1" bordercolor="#FF666666" inset="2,2,2,2">
+			<HorizontalLayout height="24" width="200">
+				<Label text="请选择时间：" width="100" align="center"/>
+				<DateTime name="DateTimeCtrl" />
+			</HorizontalLayout>
+		</VerticalLayout>
+	</HorizontalLayout>	<!-- 时间控件结束 -->
+	<Control height="20" />
+  </VerticalLayout>
+</Window>

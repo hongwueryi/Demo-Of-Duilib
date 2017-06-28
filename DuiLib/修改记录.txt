@@ -1,0 +1,7 @@
+2015-12-30添加Gif格式动态图片修改的文件有以下几个：
+Core/UIRender.h/.cpp
+Core/UIManager.h/.cpp
+Utils/stb_image.c
+
+2015-10-14 修改Edit控件的Tab消息在新弹出的窗口中不响应的bug，但是会影响WebBrowser控件
+Core/UIManager.cpp  [translatemessage（）函数]

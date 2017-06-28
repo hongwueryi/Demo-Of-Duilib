@@ -1,0 +1,37 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Window>
+  <HorizontalLayout>
+	  <VerticalLayout width="130" bkcolor="#FFD7DFD9">
+		<Option name="leftoption1ofpage3" text="浏览器1" height="50" foreimage="file='Res/Page3/leftoptionfore.png' dest='12,13,38,43'" hotimage="Res/Page3/leftoption_hover.png"  group="page3"/>
+		<Option name="leftoption2ofpage3" text="浏览器2" height="50" foreimage="file='Res/Page3/leftoptionfore.png' dest='12,13,38,43'" hotimage="Res/Page3/leftoption_hover.png" selectedimage="Res/Page3/leftoption_select.png" group="page3"/>
+		<Option name="leftoption3ofpage3" text="常用路线" height="50" foreimage="file='Res/Page3/leftoptionfore.png' dest='12,13,38,43'" hotimage="Res/Page3/leftoption_hover.png" selectedimage="Res/Page3/leftoption_select.png" group="page3"/>
+	  </VerticalLayout>
+	  <VerticalLayout bkcolor="#FFE3E3E3">
+		<TabLayout name="switchinpage3">
+			<HorizontalLayout>
+				<Text text="浏览器1"/>
+			</HorizontalLayout>
+			<HorizontalLayout>
+				 <!--<ActiveX name="ActiveXDemo1" float="false" pos="0,0,-0,-0" />-->
+				 
+				<VerticalLayout>
+					<HorizontalLayout height="70" inset="10,20,10,20">
+						<Edit name="WebAddress" bordercolor="#FFFFFFFF" width="550" bordersize="1" />
+						<Button name="openWebBrowser" width="30" text="【GO】" />
+						<Control width="20" />
+						<Button name="goBack" width="50" text="【GOBack】" />
+						<Control width="20" />
+						<Button name="goForward" width="80" text="【GOFoward】" />
+					</HorizontalLayout>
+					<HorizontalLayout>
+					<WebBrowser name="webBrowserCtrol" homepage="http://www.baidu.com" autonavi="true" />
+					</HorizontalLayout>
+				</VerticalLayout>
+			</HorizontalLayout>
+			<HorizontalLayout>
+				<Text text="常用路线"/>
+			</HorizontalLayout>
+		</TabLayout>
+	  </VerticalLayout>
+  </HorizontalLayout>
+</Window>
